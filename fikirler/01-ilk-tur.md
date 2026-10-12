@@ -197,8 +197,45 @@ Sürükleme modu her zaman olmalı.
 - **Trendde ama kalabalığın dışında.** Kum şu an çok popüler, ama hep sıralama ya da blok olarak. Serbest dökme ve manzara oluşturma boşta.
 - **Mantık Domino Chase'e benziyor ama oyun benzemiyor.** Hedefe göre izleme, yüzde, yıldız, sıradaki karar aynı; görünüş, his ve girdi tamamen farklı.
 - **Kararın kendisi sonucu belirliyor.** Nereye ne hızla döktüysen manzara o oluyor.
+- **Benzer oyun taraması da destekliyor** (aşağıda): şişeye kum dökme sadece oyuncak olarak var; A'nın teması ise Yarn It! ve yün sıralama oyunlarıyla dolu.
 
 Hızlı bir ikinci oyun gerekirse **A (Yumak)** Domino Chase motoruyla en kısa sürede çıkar.
+
+## A ve B'nin benzerleri
+
+Ozer'in sorusu: "A ve B'nin benzerleri var mı?" Mağaza listeleri ve üçüncü parti takip siteleri (MWM, AppGoblin) tarandı; indirme rakamları tahmindir.
+
+### B · Kum Şişesi
+
+| Oyun | Ne yapıyor | Fark |
+|---|---|---|
+| Sand Bottles (Alon Shama, iPad) | Şişeye renkli kum doldurma; musluğu eğerek ve sürükleyerek yönetme, bölümler + serbest mod | **Mekanik olarak en yakın.** Ama akış baskısı, sıradaki renk planlaması, hedef yüzdesi ve final yok. 2 değerlendirme, yani neredeyse hiç oynanmamış |
+| DIY Colorful Bottle Sand Art (Maysalward) | Serbest katman katman kum sanatı, şekilli şişeler, paylaşma | Oyun değil, oyuncak: hedef ve karar yok |
+| Colored Sand Painting (Latte Games, 2021) | Tuvale kum dökerek 100 resim; süre ve puan yok | Şişe değil tuval; boyama kitabı gibi |
+| Sand in a Bottle (paint.toys, tarayıcı) | Sürükleyip üç renk kum dökme | Oyuncak |
+| Sand Bottle Sort, Sand Sorting Challenge, Sand Frenzy | Şişeler arasında kum katmanı taşıyarak renk sıralama | Su sıralama oyununun kum kaplaması |
+| Sand Loop, Sand Flow! Collect, Sandy Jam | Konveyörde kutularla renkli kum toplama | Pixel Flow türü |
+| Sandtris, Sand Blocks, Sand Block Puzzle, Fill Sand | Düşen bloklar kuma dönüşüyor | Tetris / blok bulmaca türü |
+
+**Sonuç:** Şişeye kum dökme teması var, ama hep serbest bir oyuncak olarak. Akan kum, sıradaki renk kararı, hedefe benzerlik, yıldız ve final bir arada olan bir oyun bulunamadı.
+**Risk:** Mağazada "sand" kelimesi çok kalabalık; sıralama ve blok oyunları ekranı dolduruyor. İkon ve ilk ekran görüntüsü sıralama tüpü değil, **içinde manzara olan şişe** göstermeli; isimde "sort" çağrışımı olmamalı.
+
+### A · Yumak
+
+| Oyun | Ne yapıyor | Fark |
+|---|---|---|
+| Yarn It! (Moon Active, Nisan 2026) | Kedili, ASMR tarzı; yün yumaklarıyla nakışlı resimleri sökme | **Tema neredeyse aynı: kedi + yün + nakış resmi**, hem de Coin Master'ın yayıncısından. Mekanik sıralama / sökme |
+| Yarn Flow, Yarn Loop, Wool Flow, Knit Factory, Unravel It! | Konveyörlü yün sıralama, örgü resim tamamlama | Pixel Flow türünün yün kaplaması; ekran görüntüleri hep örgü resim |
+| Thread Jam | Makaralarla resmi 3D dikişlerle doldurma, sakin | Eşleştirme; çizme yok |
+| Kitty Yarn | Yumağa sıkışan kedileri ip katmanlarını gevşeterek kurtarma | Dokunarak kaldırma |
+| Stitch. (Apple Arcade, 2022) | Nakış temalı sayı bulmacası | Izgara bulmacası. Bir eleştirmen "gerçekten dikiyormuş gibi hissettiren bir oyun" istemiş; yani çizerek dikme boşta |
+| Unravel (konsol, 2016) | Karakter yürüdükçe yünü çözülüyor, makaralardan yenileniyor | **"Yün kaynak, sapıp yenile" fikri burada var**, ama platform oyunu |
+| Roller Splat! / AMAZE! (2019) | Labirentte top yuvarlayıp yolu boyama | İzleme ve doldurma hissi; kaydırarak dört yöne, serbest çizim yok |
+| Wake the Cat (2013), Yarning For Freedom (PC) | Yumağı fırlatıp kediye ulaştırma; kedinin pati attığı yumak koşucusu | Kedi ve yumak ilişkisi var, çizme yok |
+
+**Sonuç:** "Sürükle, iplik nakış olsun, peşinde kedi" mekaniği mobilde bulunamadı. Ama **tema dolu**: kedi + yün + nakışlı resim şu an Moon Active'in Yarn It! oyununda ve onlarca yün sıralama oyununda.
+Mekanik ise Domino Chase'in kendisi. Yani A mağazada Yarn It!'e benzeyip oyunda Domino Chase'e benzeme riski taşıyor.
+A seçilirse tema değişmeli: kedi ve örgü resim yerine başka bir dünya (ör. yün yerine uçurtma ipi, kilim motifi ya da ışık hattı).
 
 ## Rafta bekleyenler
 
