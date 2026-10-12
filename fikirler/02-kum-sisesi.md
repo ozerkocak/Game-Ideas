@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 3:** basılı tut = dök, sütun tabanlı yumuşak kum fiziği, yenilenen 3D sahne. Sürüm 2 ve 3 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
+**Güncel sürüm 4:** tane tane kum görüntüsü ve keskin katman sınırları, kırılan cam, yeni kum sesi, titreşim haritası. Sürüm 2-4 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -272,3 +272,82 @@ Açılırken hızlı (50 ms), kapanırken yavaş (180 ms) değişir.
 - Hâlâ gerçek telefonda ölçülmedi; hesap tarafı kare başına ~1,2 ms (test tarayıcısında, çizim hariç).
 - Kum fiziği 2D kesit; 3D üst yüzey bu kesitten türetiliyor.
 - Duvar ve masa dokuları her açılışta rastgele çiziliyor (yaprak gölgeleri her seferinde biraz farklı).
+
+## Sürüm 4: tane tane kum, kırılan cam, yeni kum sesi
+
+Geri bildirim: "Kumun dolduğu bardakta hâlâ sorun var, katmanın olduğu çizgi bile karışıyor. Grafikleri daha da üst düzey yapalım.
+Kum dökülürken çıkan ses çok boğuk ve rahatsız edici. Dökülme hâlâ tam rahatlatmıyor, bir şeyler eksik; ses net olarak etkiliyor ama grafikler de istenen düzeyde değil.
+Telefona alınca, canlıya alınca titreşimi de unutmayalım."
+
+### Katman çizgisi neden karışıyordu
+
+Sürüm 3'te kum duvarı 256 × 384 hücrelik bir renk dokusundan çiziliyordu ve renkler hücreler arasında karıştırılıyordu (doğrusal süzme).
+İnce bir katman (örneğin dağların kenarına düşen kar) bir hücreden ince kalınca sınırda iki renk beneklenerek birbirine geçiyordu; katman sınırları bulanık ve kirli görünüyordu.
+
+Şimdi:
+- Renk yerine **katman numarası** 1024 satırlık bir dokuda tutuluyor ve hiç karıştırılmıyor.
+- Ekrandaki her piksel bir kum tanesine düşüyor; o tanenin merkezi hangi katmandaysa tane o renkte. Sınır tane tane keskin, ince katmanlar serpinti gibi görünüyor.
+- Kum duvarının üst kenarı artık doku kesmesi değil, geometri: her karede kumun üst çizgisine oturuyor, kenar yumuşak.
+
+### Hedef çizgisi
+
+- Şimdi dökülen katmanın hedef çizgisi kumun üstünde de görünür (ince beyaz kesik çizgi). Kum çizgiye yetiştiği yerde çizgi o noktada altın rengi ve kesintisiz olur.
+- Biten katmanların çizgileri kumun içinde kaybolur; resim kirlenmez.
+- Hedef bölgesinin renkli tülü yarıya indi; üst yüzeyi bulanıklaştırıyordu.
+
+### Grafik
+
+| Konu | Sürüm 3 | Sürüm 4 |
+|---|---|---|
+| Kum | Düz renk üstüne gürültü | Tane dokusu: 512 piksellik Voronoi taneler, her tanenin kendi tonu ve gölgesi; seyrek koyu ve beyaz mineral taneleri, nadir ışıltı. Katman içinde, alttaki katmanın şeklini izleyen çok hafif ince tabakalar |
+| Üst yüzey | Plastik gibi düz renk, kenarda kesik | Aynı tane malzemesi; yandan bakınca dokusunu kaybetmesin diye süzülmüş (anizotropik) doku. Tepeler biraz aydınlık, çukurlar gölgeli. İnce kum tabana serpinti gibi biter |
+| Cam | Yarı saydam yüzey, kenarda yuvarlak beyaz parlamalar | İki geçişli çizim: sahne önce dokuya çizilir, cam onu kenarlara doğru hafifçe kırar; kalın kenarda yeşilimsi gri soğurma, yansıma sadece kenarlarda (fresnel), siluetin içinde ince parlak hat. Nokta parlama yok |
+| Akış | Düz renkli şerit | Kenarı tane tane dağılan, içinde hareketten uzamış tane izi olan şerit; çevresinde ışık alan küçük taneler |
+| Taneler | Düz noktalar | Işık alan küçük küreler (sıçrayan, yamaçtan kayan, akışın çevresindeki) |
+
+Eski cihazlarda (WebGL1) iki geçiş yerine yarı saydam cam çizilir; oyun aynı.
+
+### Ses
+
+Eski döküş sesi yumuşatılmış pembe gürültüydü; ölçünce enerjinin %59'u 500 Hz altında çıktı. Boğukluk buradan geliyordu.
+Yeni kum sesi binlerce minik tane çarpmasından oluşan, önceden hesaplanmış üç "tane bulutu":
+
+| Ses | Ne zaman | Merkez frekans | 500 Hz altı | 1,5-6 kHz | 8 kHz üstü |
+|---|---|---|---|---|---|
+| Eski pembe gürültü | Döküşte | 587 Hz | %59 | %6 | %0 |
+| Kum kuma | Kum yığının üstüne düşerken | 3,1 kHz | %1,5 | %77 | %2,3 |
+| Kum cama | Kum boş cam tabana düşerken (her bölümün ilk saniyeleri) | 4,8 kHz | %0,1 | %76 | %7,8 |
+| Kayma | Kum yamaçtan kayarken, kümeli | 2,1 kHz | %3,4 | %60 | %1 |
+
+- Ses düştüğü yere göre sağdan ya da soldan gelir, düşme hızına göre biraz parlaklaşır.
+- Müzik ve kum hafif bir oda yankısından geçer. Melodi notaları kalimbaya benzer (yumuşak gövde, kısa metalik dil sesi).
+- Arkada çok alçak, 7,5 saniyede bir akor değiştiren yumuşak bir ped var. Deniz sesi de boğuk değil, yavaş dalgalanan bir hışırtı.
+- Tane bulutları sayfa açılınca karelere bölünerek hesaplanır (karede 8 ms), ilk dokunuşu bekletmez.
+
+### Titreşim haritası (uygulamaya geçerken)
+
+| Katman | Ne zaman | Uygulama (Capacitor Haptics) | Android tarayıcı | iPhone tarayıcı |
+|---|---|---|---|---|
+| Mikro: kum tanesi | Kum düşerken; düşen kum arttıkça sıklaşır (55-165 ms'de bir) | `selectionChanged` (en hafif tık); basınca `selectionStart`, bırakınca `selectionEnd` | `vibrate(5-7 ms)` | iOS 18 "switch" hilesi, sürüklerken (deneysel) |
+| Orta | Akış serisi, renk değişimi, katman bitti, süs yere değdi, üfleme | `impact` LIGHT/MEDIUM | `vibrate(12-40 ms)` | aynı hile, tek tık |
+| Makro | Kapak, yıldızlar | `impact` HEAVY ve dizi | `vibrate(60 ms)`, desen | aynı hile |
+
+- Uygulama paketi `uygulamalar/kum-sisesi/` altında Domino Chase'teki `uygulama/` yapısıyla kurulacak; `@capacitor/haptics` eklentisi o pakete girecek.
+  Prototip kodu eklentiyi zaten tanıyor (`window.Capacitor.Plugins.Haptics`); pakete girince ek iş gerekmez.
+- iPhone'da tarayıcıdan gerçek titreşim yok; asıl his uygulamada gelecek.
+
+### Puan ve zorluk
+
+Fizik ve puan değişmedi; sürüm 3'ün bot tablosu geçerli. Kontrol için yeniden koşuldu: insan 1. bölüm %94, 5. bölüm %86; hiç dokunmayan 1. bölüm %52; kusursuz 9. bölüm %91 (sürüm 3 ile aynı).
+
+### Bilinen eksikler
+
+- Gerçek telefonda ölçülmedi. Hesap tarafı kare başına ~1,6 ms (test tarayıcısında, çizim hariç); iki geçişli çizim ekran kartına ek yük getirir, eski telefonlarda yavaşlarsa piksel oranını düşürmek gerekebilir.
+- Kum fiziği hâlâ 2D kesit; ön ve arka arasında yığın şekli aynı (tepeler ortada biraz kabarık çiziliyor).
+- Sesi kulakla dinleyemedim; frekans ölçümüne ve tasarıma güvendim. Telefonda dinleyip söylemen gerekiyor.
+
+### Ozer'e sorular (sürüm 4)
+
+1. Katman sınırları artık temiz mi? Kum dokusu (tanelerin iriliği, koyu-beyaz benekler) hoşuna gidiyor mu?
+2. Yeni kum sesi rahatlatıyor mu? Kum cama düşerken çıkan tıngırtı ve arkadaki ped hoş mu, fazla mı?
+3. Hâlâ "bir şeyler eksik" diyorsan en çok neyi hissediyorsun: akışın kendisi mi, sonuç anı mı, müzik mi?

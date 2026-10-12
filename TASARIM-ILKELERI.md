@@ -48,6 +48,9 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | Rahatlatan oyunda akışı oyuncu yönetsin (basılı tut = dök, bırak = dur). Baskıyı kaldırır, durup düşünmeye izin verir | Kum Şişesi sürüm 3 |
 | Hücreden hücreye zıplayan tanecikler "dijital" görünür. Kum sanatı hissi için yumuşak, kesirli yükseklikli bir model ve ince doku daha iyi | Kum Şişesi sürüm 3 |
 | Süs gibi eklemeler başarı puanını bozmamalı; kendi ölçütüyle (halka) ayrıca değerlendirilir | Kum Şişesi sürüm 3 |
+| Katman sınırları tane ölçeğinde keskin olmalı. Renkleri karıştırarak (doğrusal süzme) çizmek sınırı kirli ve bulanık gösterir; her pikselde tane merkezinin hangi katmanda olduğuna bak | Kum Şişesi sürüm 3 → 4 |
+| Boğuk ses = enerjinin çoğu 500 Hz altında. Kum ve tane sesi 1,5-6 kHz'de toplanmalı: binlerce kısa rezonans, hafif yankı. Sesi duyamıyorsan spektrumunu ölç | Kum Şişesi sürüm 3 → 4 |
+| Camı gerçekçi gösteren yansıma değil kırılma: arkadaki görüntü kenarlara doğru hafifçe bükülür ve kalın yerde biraz kararır. Kırılmayı abartma, kenardaki kum uzayıp halka halka görünür | Kum Şişesi sürüm 4 |
 
 ## Reddedilmiş yönler
 
@@ -73,6 +76,7 @@ Telefonda "güzel his" üç katmanda verilir. Her oyun tasarımında bu tablo do
 
 - Ses Web Audio ile sentezlenir (dosya yok, uygulama küçük kalır). Pentatonik ya da tanıdık telifsiz melodiler; yanlış hamle sert bir ses değil, sadece "sessizlik" ya da kuru bir tık.
 - Ortam sesi (rüzgâr, gece böcekleri, yağmur) çok düşük seviyede sürekli çalar; rahatlamayı o taşır.
+- Sürekli sesler (akış, hışırtı) boğuk olmasın: alçak frekansı kes, parlak ama yumuşak tut (sert tiz de yorar). Müzik ve efektler hafif bir oda yankısından geçerse daha sakin duyulur.
 - Titreşim seviyeleri: hafif < 14 ms, orta 14-50 ms, güçlü ≥ 50 ms (Domino Chase'teki `vib()` eşlemesi). Uygulamada Capacitor Haptics `impact` kullanılır.
 - Titreşimi abartma: sürekli titreşim yorucu. Mikro katmanı sesle eşle, ama hızlı akışta seyrelt.
 - Ayarlarda ses ve titreşim ayrı ayrı kapatılabilir.
