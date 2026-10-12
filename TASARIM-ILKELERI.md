@@ -41,6 +41,9 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 |---|---|
 | Benzerlik puanını oyuncunun ekranda gördüğü şeye göre ölç. Büyük ve kolay bir bölge hücre sayımında hataları sulandırır, düşünmeden oynayan da yüksek puan alır | Kum Şişesi: gökyüzü katmanı yüzünden süpüren bot %94 alıyordu; çizgi uzaklığına geçince %70'e indi |
 | Zorluk ayarında önce "hiç dokunmayan" ve "düşünmeden oynayan" botun yıldız alamadığını, kusursuz botun her bölümde tam puan alabildiğini doğrula | Kum Şişesi |
+| 2D'de ışık-gölge taklidi yetmiyor; Ozer gerçek 3D sahne istiyor (cam, masa, ışık, yansıma). "3D hissi" yerine baştan 3D kur | Kum Şişesi sürüm 1 → 2 |
+| Tanecik fiziğinde üç şart: hareket eden tane komşularını uyandırır, yüzeydeki taneler hiç uyumaz, düşen tane çarptığı anda saçılır. Biri eksikse dik yerler takılı kalır ya da akışın altında havada kule oluşur | Kum Şişesi sürüm 2 |
+| Fizik değişince zorluk da değişir: daha gerçekçi yayılan kum, hiç dokunmayan oyuncuya bile yıldız kazandırdı. Fizik her değiştiğinde bot tablosunu yeniden çalıştır | Kum Şişesi sürüm 2 |
 
 ## Reddedilmiş yönler
 

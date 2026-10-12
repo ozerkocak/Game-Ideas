@@ -3,7 +3,8 @@
 > Yukarıdan durmadan renkli kum akıyor. Huniyi parmağınla sağa sola sürüyorsun;
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
-Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır, internet gerekmez.
+Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
+**Güncel sürüm 2:** 3D grafik (three.js) ve yeni kum fiziği. Değişiklikler en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -131,3 +132,74 @@ Yanlış yere yığılan kumu düzeltme şansı. Botlar kullanmıyor; etkisi öl
 3. Titreşim (Android ya da uygulama) tane tane hissediliyor mu, fazla mı?
 4. Melodi hoş mu, yoksa sadece kum sesi ve ortam sesi mi kalsın?
 5. Süs bırakmak (tekne, kaktüs, ay) keyifli mi? Daha çok süs mü olmalı?
+
+## Sürüm 2: 3D grafik ve yeni kum fiziği
+
+Geri bildirim: "Oyun mantığı güzel. Grafikler hoşuma gitmedi, çok daha kaliteli olmalı. Aynı yere çok kum gidince ya da köşeye gelince bazı tanelerin aşağı kayması gerekiyor, orada eksikler var."
+
+### Fizik
+
+Sürüm 1'de tane yere değince birkaç karede yuvarlanıp duruyor, sonra bir daha hiç kontrol edilmiyordu. Akış yoğunken taneler birbirini beklerken durdu, dik yerler ve köşeler öyle kaldı.
+
+| Kural | Nasıl çalışır |
+|---|---|
+| Hız ve ivme | Her tanenin yatay ve dikey hızı var. Düşen tane ivmelenir (saniyede en fazla 330 hücre). |
+| Çarpma saçılması | Çarpan tanenin düşme hızının bir kısmı yana savrulmaya döner. Akışın altında koni yayılarak büyür. |
+| Çığ | Yamaçtan kayan tane hız kazanır ve aynı karede 4 hücreye kadar akar. Döküş durunca kum ~1 sn içinde durur. |
+| Uyanma | Yerinden oynayan tane üstündeki ve yanındaki taneleri uyandırır; altı boşalan tane mutlaka düşer. |
+| Yüzey hiç uyumaz | Yüzeydeki taneler her karede yeniden denenir; 34°'den dik bir yer kalamaz. Testlerde takılı tane: 0. |
+| 34° yığılma | 3 yana 2 aşağı yol açıksa tane yana yürür (artık adım adım, ışınlanmadan). |
+| Cam kenarı | Cam üstünde sürtünme daha az: kum ~27°'den dik cam yamaçta kayar (kase dibinde ortaya akar). |
+| Akış sıkışması | İlk denemede akışın düştüğü sütunda taneler birbirinin üstüne konup havada 60 hücrelik bir kule oluşturdu. Çarpan tane artık aynı anda saçılıp kayıyor; kule yok. |
+
+Izgara 150×200'den **210×280**'e çıktı (taneler %30 daha küçük). Fizik adım başına 3 geçiş; fizik ve sahne güncellemesi kare başına ~2,3 ms (test tarayıcısında, çizim hariç).
+
+### Grafik (three.js r128)
+
+- **Gerçek 3D sahne:** Ahşap masada cam kavanoz, sıcak arka plan, yumuşak temas gölgesi ve ışığın uzattığı gölge.
+- **Cam:** Kenarlara doğru güçlenen yansıma (fresnel), solda pencere yansıması, ince ışık parlaması, kalın dip ve yuvarlak ağız kenarı. Arka duvar da görünür.
+- **Kum:** Fizik 2D kesitte çalışır, kesit kavanozun iç duvarına sarılır. Taneler kare ızgarada değil; düzensiz dağılmış (hücresel gürültü), her tane kendi tonunda, ortası ışık alır, kenarı gölgede, bazıları ışıltılı.
+- **Kumun üst yüzeyi:** Sütun yüksekliklerinden 3D yüzey; tepeler içeride biraz kabarır, sırt yerine yuvarlak tümsek görünür.
+- **Pirinç huni:** İçindeki kum azaldıkça seviyesi düşer.
+- **Düşen kum** tane tane 3D noktalar. Düştüğü yerde hafif toz kalkar, doğru yere dökerken ışık parlar.
+- **Süsler:** Huninin altında 3D voksel olarak asılı durur. Düşeceği yere kesik çizgi, etrafında geri sayım halkası var. Düşünce camın önündeki kuma gömülür.
+- **Final:** Ahşap kapak kapanır, kamera kavanozun çevresinde hafifçe döner ve yaklaşır, ışık camın üstünden geçer, katmanlar alttan üste parlar, konfeti çıkar.
+- **Raf:** Şişenin küçük resmi artık 3D görüntüden alınıyor.
+- **Arayüz:** Buzlu cam bilgi şeritleri, Nunito yazı tipi, kumlu sıra çubuğu.
+- **Renk:** ACES ton eşleme kum renklerini soldurup zeytin yeşiline çeviriyordu; kapatıldı, ışıklar buna göre ayarlandı.
+- **Ortam yansıması:** three.js PMREM test tarayıcısında bütün malzemeleri siyah yaptı. Her cihazda çalışsın diye 6 tuvalden küp harita kullanılıyor.
+
+### Puan ve zorluk
+
+- Yeni fizikte kum daha gerçekçi yayıldığı için hiç dokunmayan bot bile 8. bölümde %79 (2 yıldız) aldı.
+- Puan aralığı daraltıldı: çizgiye 3 satıra kadar tam puan, 16 satırda sıfır (önce 25).
+- Saçılma biraz azaltıldı, kum daha kontrollü.
+- Yıldız eşikleri: ★ %58, ★★ %74, ★★★ %86 ve bütün süsler halkada.
+- **8. bölüm (Gün batımı):** Dar dipli kadehte ortaya dökmek kendiliğinden düz katman verdiği için katmanlar ortası çukur yaylar oldu ("kenarlara daha çok dök").
+
+### Bot simülasyonu (sürüm 2; bölüm başına 3 koşu: ortalama yüzde ve yıldız)
+
+| Profil | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Hiç dokunmayan | 33 ★0 | 35 ★0 | 32 ★0 | 32 ★0 | 52 ★0 | 37 ★0 | 25 ★0 | 51 ★0 | 26 ★0 | 34 ★0 |
+| Süpürücü | 76 ★2 | 61 ★1 | 67 ★1 | 63 ★1 | 54 ★0 | 65 ★1 | 62 ★1 | 74 ★1 | 71 ★1 | 54 ★0 |
+| Dağınık | 79 ★2 | 55 ★0,3 | 73 ★1,7 | 63 ★0,7 | 74 ★1,3 | 60 ★0,7 | 72 ★1,7 | 81 ★2 | 61 ★0,7 | 60 ★0,7 |
+| İnsan | 86 ★2,3 | 70 ★1,3 | 83 ★2 | 85 ★2,3 | 77 ★2 | 76 ★1,7 | 74 ★1,3 | 79 ★2 | 79 ★1,7 | 70 ★1,3 |
+| Kusursuz | 97 ★3 | 91 ★3 | 90 ★3 | 94 ★3 | 89 ★3 | 89 ★3 | 87 ★3 | 95 ★3 | 87 ★3 | 89 ★3 |
+
+- Hiç dokunmayan her bölümde yıldızsız; kusursuz her bölümde 3 yıldız alabiliyor.
+- Sürüm 1'e göre daha zor: insan botu ortalama 2-2,7 yerine 1,3-2,3 yıldız alıyor. Süsleri her bölümde tutturuyor.
+
+### Bilinen eksikler ve dürüst notlar
+
+- **Gerçek telefonda ölçülmedi.** Test tarayıcısı yazılımsal çizimle çalışıyor (saniyede birkaç kare); hız ölçümü sadece hesap tarafı için (~2,3 ms). Görüntü telefonda takılırsa ilk düşürülecek şey tane gölgelendiricisi ve fizik geçiş sayısı.
+- Kum fiziği 2D kesit. 3D yüzey derinlik boyunca aynı yüksekliği gösteriyor; tepeler sadece görsel olarak yuvarlatıldı.
+- İnternetsiz açılırsa (three.js gelmezse) "Bu cihazda 3D grafik açılamadı" yazar. Uygulamaya geçerken three.js pakete gömülecek (Domino Chase'teki gibi).
+- Zorluk sürüm 1'den yüksek. Gerçek oyuncu için fazla zor gelirse ilk ayar eşikler (58/74/86).
+
+### Ozer'e sorular (sürüm 2)
+
+1. Grafik istediğin seviyeye geldi mi? Cam, kum tanesi, ışık, masa: en çok hangisi eksik?
+2. Kumun kayması, yığılması, cam kenarından akması gerçekçi mi?
+3. Telefonda akıcı mı, takılma var mı?
+4. Zorluk: 2 yıldız almak zor mu geliyor?
