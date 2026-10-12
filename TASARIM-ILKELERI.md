@@ -44,6 +44,10 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | 2D'de ışık-gölge taklidi yetmiyor; Ozer gerçek 3D sahne istiyor (cam, masa, ışık, yansıma). "3D hissi" yerine baştan 3D kur | Kum Şişesi sürüm 1 → 2 |
 | Tanecik fiziğinde üç şart: hareket eden tane komşularını uyandırır, yüzeydeki taneler hiç uyumaz, düşen tane çarptığı anda saçılır. Biri eksikse dik yerler takılı kalır ya da akışın altında havada kule oluşur | Kum Şişesi sürüm 2 |
 | Fizik değişince zorluk da değişir: daha gerçekçi yayılan kum, hiç dokunmayan oyuncuya bile yıldız kazandırdı. Fizik her değiştiğinde bot tablosunu yeniden çalıştır | Kum Şişesi sürüm 2 |
+| Cam gerçekte neredeyse görünmez: yansıma sadece kenarlarda, bir-iki ince ışık çizgisi. Bütün yüzeye yansıma eklemek camı "lamba" yapar | Kum Şişesi sürüm 2 → 3 |
+| Rahatlatan oyunda akışı oyuncu yönetsin (basılı tut = dök, bırak = dur). Baskıyı kaldırır, durup düşünmeye izin verir | Kum Şişesi sürüm 3 |
+| Hücreden hücreye zıplayan tanecikler "dijital" görünür. Kum sanatı hissi için yumuşak, kesirli yükseklikli bir model ve ince doku daha iyi | Kum Şişesi sürüm 3 |
+| Süs gibi eklemeler başarı puanını bozmamalı; kendi ölçütüyle (halka) ayrıca değerlendirilir | Kum Şişesi sürüm 3 |
 
 ## Reddedilmiş yönler
 

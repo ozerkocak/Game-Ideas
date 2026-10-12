@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 2:** 3D grafik (three.js) ve yeni kum fiziği. Değişiklikler en altta; üstteki bölümler sürüm 1'i anlatır.
+**Güncel sürüm 3:** basılı tut = dök, sütun tabanlı yumuşak kum fiziği, yenilenen 3D sahne. Sürüm 2 ve 3 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -203,3 +203,72 @@ Izgara 150×200'den **210×280**'e çıktı (taneler %30 daha küçük). Fizik a
 2. Kumun kayması, yığılması, cam kenarından akması gerçekçi mi?
 3. Telefonda akıcı mı, takılma var mı?
 4. Zorluk: 2 yıldız almak zor mu geliyor?
+
+## Sürüm 3: basılı tut, yumuşak kum, yeni sahne
+
+Geri bildirim: "Bardak çok parlıyor, gerçekçi durmuyor. Kullanıcı elini çekince akış dursa mantıklı olur mu? Taneler daha gerçekçi ama taneler, dökülme hissi ve rahatlama hissi istediğim gibi değil. 2 yıldız almak çok kolay değil. Grafiklerde hâlâ çok gerideyiz."
+
+### Basılı tut = dök
+
+- Ozer'in sorusuna cevap: evet. Basılı tutunca kum akar, bırakınca durur. Baskıyı kaldırır, oyuncu durup bakabilir; rahatlatma hedefine uygun.
+  "Girdiyi durdurma" kuralıyla çelişmez, durduran oyuncunun kendisi.
+- Akış 0,08 sn içinde yumuşakça açılıp kapanır. Havadaki kum düşmeye devam eder, akışın kuyruğu kopar.
+- Süs huninin altında asılı gelir; sürükleyip parmağını kaldırınca düşer. Geri sayım yok.
+- Üfleme sadece 💨 düğmesiyle (çift dokunma basılı tutmayla karıştığı için kalktı).
+
+### Fizik: sütun tabanlı yumuşak kum
+
+Sürüm 2'nin hücre tabanlı fiziğinde taneler hücreden hücreye zıplıyordu; hareket titrek, yüzey pürüzlü, görüntü dijital kalıyordu.
+
+| Deneme | Sonuç |
+|---|---|
+| Sütunlar arası komşu dengeleme (her karede 3 tarama) | Fazlalık uzağa çok yavaş taşındı: düşen yerde iğne (eğim 5,3), oturması 170 sn |
+| Önceki sonucu kullanan ileri-geri taramalar | Daha iyi ama yine yavaş (oturma 40 sn) |
+| **Düşen pay yokuştan yuvarlanıp sığdığı ilk yerde kalır** | **Yüzey hiçbir an 34°'yi aşmaz, kalıntı akış yok, kare başına 0,02 ms.** Seçilen bu |
+
+- 256 sütun; her sütun alttan üste renkli katmanlardan bir yığın, yükseklikler kesirli. Katman sınırları yumuşak eğriler olur (kum sanatı görünümü).
+- Her payın durma eğimi %±7 değişir, yamaç doğal biraz pürüzlü.
+- Akış artık dilimlerden oluşur: huniden çıkan her dilim yerçekimiyle düşer, çarptığı yere kum bırakır. Huni hareket edince akış kıvrılır, çarptığı nokta gecikir (gerçekteki gibi).
+- Kayma görüntüsü: payın yuvarlandığı yol boyunca yamaçtan aşağı kayan taneler çizilir. Çarptığı yerde küçük sıçrama ve çok hafif toz.
+- Üfleme ve süs sonrası dikleşen yerler tam dengelemeyle düzeltilir.
+
+### Grafik
+
+| Konu | Sürüm 2 | Sürüm 3 |
+|---|---|---|
+| Cam | Bütün yüzeye sıcak yansıma, uzun parlak şeritler: lamba gibi ışıyordu | Neredeyse görünmez: yansıma sadece kenarlara doğru, tek yumuşak pencere yansıması, ince kenar çizgisi; arka yüz ve dip çok az yansıtır |
+| Kum | Kare ızgara tane, sert benekler | Sütun dokusundan yumuşak renkler, katman sınırında hafif bastırılmış çizgi, üstünde çok ince tane, hafif benek ve katman boyunca damarlar, nadir ışıltı |
+| Akış | Tek tek noktalar | Kenarları yumuşak, içinde aşağı akan tane dokusu olan şerit; çevresinde tek tük savrulan taneler |
+| Sahne | Düz bej duvar | Güneş vuran sıva duvar ve bulanık yaprak gölgeleri, masada güneş lekesi, camın uzun gölgesi ve camdan geçen ışık lekesi, ekran kenarında hafif karartma |
+| Süsler | Piksel sanat vokseller | Vektör çizimler (her platformda aynı), cama yaslı; hedef halkasında silik hayaleti |
+| Üst yüzey | Sütun sütun keskin sırtlar | Yumuşatılmış, tepeler içeride kabarık tümsek |
+
+Kum tepelerinde beyaz lekeler (biriken toz ve nota simgeleri) çıkıyordu; toz çok hafifletildi, nota simgeleri kaldırıldı (müzik kaldı).
+
+### Ses
+
+Döküş sesi üç katman: akış (yumuşak pembe gürültü, 1,5 kHz altı), çarpma (seyrek tıkırtılar, düşme hızına göre) ve yamaçtan kayma (daha pes tıkırtılar, kayan kum kadar).
+Açılırken hızlı (50 ms), kapanırken yavaş (180 ms) değişir.
+
+### Puan ve zorluk
+
+- Puan aralığı 20 (çizgiye 3 satıra kadar tam, 23 satırda sıfır). Eşikler: ★ %72, ★★ %79, ★★★ %86.
+- Süsler puanda tarafsız: kapladığı yükseklik, hedefte o yükseklikte hangi katman varsa ona sayılır. Önce kuğu gölün üstünde "yeşil" sayılıp 9. bölümü haksız yere zorlaştırıyordu.
+- Süsler %40 büyüdü.
+
+| Profil | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Hiç dokunmayan (ortada basılı tutar) | 52 ★0 | 56 ★0 | 50 ★0 | 48 ★0 | 71 ★0 | 56 ★0 | 51 ★0 | 65 ★0 | 38 ★0 | 56 ★0 |
+| Süpürücü (hep döker) | 90 ★3 | 77 ★1 | 71 ★0 | 58 ★0 | 73 ★1 | 60 ★0 | 70 ★0 | 85 ★2 | 67 ★0 | 66 ★0 |
+| Dağınık | 84 ★2,3 | 74 ★1 | 63 ★0 | 75 ★0,7 | 79 ★1,3 | 68 ★0,3 | 74 ★0,7 | 80 ★1,7 | 68 ★0 | 76 ★1,3 |
+| İnsan (eksik gördüğü yerde döker) | 94 ★3 | 83 ★2 | 84 ★2,3 | 88 ★3 | 86 ★2,7 | 81 ★2 | 80 ★1,7 | 89 ★3 | 79 ★1,7 | 81 ★2 |
+| Kusursuz | 98 ★3 | 96 ★3 | 98 ★3 | 95 ★3 | 95 ★3 | 90 ★3 | 89 ★3 | 94 ★3 | 91 ★3 | 92 ★3 |
+
+- İnsan botu artık çoğu bölümde 2 yıldız ve üstü alıyor (sürüm 2'de 1,3-2,3).
+- Düşünmeden süpüren 1. bölümde 3 yıldız alıyor: düz katmanlı ilk bölüm zaten süpürmeyi öğretiyor. 8. bölümün yayları da süpürmenin dönüş noktalarında kendiliğinden oluşuyor (2 yıldız).
+
+### Bilinen eksikler
+
+- Hâlâ gerçek telefonda ölçülmedi; hesap tarafı kare başına ~1,2 ms (test tarayıcısında, çizim hariç).
+- Kum fiziği 2D kesit; 3D üst yüzey bu kesitten türetiliyor.
+- Duvar ve masa dokuları her açılışta rastgele çiziliyor (yaprak gölgeleri her seferinde biraz farklı).
