@@ -35,6 +35,13 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | Kıl payı kurtulmada kısa ağır çekim, yıldızların tek tek patlaması, şok dalgası, konfeti | Domino Chase |
 | Risk-ödül sapmaları (3. yıldız için riskli bloklar, kenar tarlası) | Domino Chase |
 
+## Prototiplerden çıkan dersler
+
+| Ders | Nerede |
+|---|---|
+| Benzerlik puanını oyuncunun ekranda gördüğü şeye göre ölç. Büyük ve kolay bir bölge hücre sayımında hataları sulandırır, düşünmeden oynayan da yüksek puan alır | Kum Şişesi: gökyüzü katmanı yüzünden süpüren bot %94 alıyordu; çizgi uzaklığına geçince %70'e indi |
+| Zorluk ayarında önce "hiç dokunmayan" ve "düşünmeden oynayan" botun yıldız alamadığını, kusursuz botun her bölümde tam puan alabildiğini doğrula | Kum Şişesi |
+
 ## Reddedilmiş yönler
 
 | Yön | Neden |

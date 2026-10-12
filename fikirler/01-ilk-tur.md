@@ -6,6 +6,8 @@ Mevcut oyunların kopyası olmasın ama trendlerden beslensin. Mantık Domino Ch
 Her yön `TASARIM-ILKELERI.md`'deki şartlara göre yazıldı ve `TRENDLER.md`'deki bir trendden besleniyor.
 **Seçilmeden kod yazılmayacak.**
 
+**Karar:** Ozer B'yi seçti ("başlayalım"). Tasarım: `fikirler/02-kum-sisesi.md`, prototip: `prototipler/01-kum-sisesi.html`.
+
 ## Kısa karşılaştırma
 
 | | A · Yumak | B · Kum Şişesi | C · Ateşböceği | D · Suluboya |
