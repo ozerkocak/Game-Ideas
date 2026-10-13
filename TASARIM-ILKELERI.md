@@ -21,6 +21,8 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 8. **Kopya değil.** Trend oyunlardan hissi al, yapıyı alma. Özellikle Pixel Flow üçlüsü (resim temizleme + çevrede dönen pist + renkli birimleri gönderme) birlikte olmaz.
 9. **Bilinen bir türün kaplaması olmaz** (Tetris, Puyo, blok bulmaca, 3'lü eşleştirme).
 10. **Kısa bölüm:** 20-45 sn. İlk 3 bölüm herkes için kolay; zorluk sonra açılır ve strateji fark yaratır.
+11. **Global oyun.** Domino Chase gibi her oyun dünyaya çıkar: uygulama adı ve mağaza başlığı İngilizce, Türkiye'ye özel ad ya da alt başlık olmaz (Sandful).
+    Arayüz İngilizce ve Türkçe; telefonun diliyle açılır, oyun içinden değişir. Metinleri baştan `t()` ile yaz, oyunu kelime okutmadan anlaşılır kur.
 
 ## Domino'dan çıkan dersler
 

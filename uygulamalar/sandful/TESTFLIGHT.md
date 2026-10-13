@@ -11,18 +11,20 @@ Uygulama internetsiz çalışır.
 | İlk açılış | Doğrudan 1. bölüm; elle sürükleme ipucu ve "Basılı tut: kum akar" yazısı |
 | Sonraki açılışlar | Raf (bölümler, yıldızlar, bitmiş şişelerin küçük resimleri); sıradaki bölümden devam |
 | Bölümler | 10 bölüm; bir bölümü açmak için öncekinden en az 1 yıldız |
-| Dil | Sadece Türkçe |
+| Dil | Telefon Türkçeyse Türkçe, değilse İngilizce. Raftaki "Dil" düğmesiyle değişir |
 | Ses | Sentezlenen kum sesi (rafta seçilir: Tıpırtı, Kadife, İnce), melodi ve ortam. Rafta "Ses" ve "Müzik" ayrı kapatılır |
 | Sessiz anahtar | iPhone sessizdeyse oyun sesi çıkmaz (oyunlarda olağan davranış). Arkada çalan müzik kesilmez, oyunla karışır |
 | Titreşim | iPhone titreşim motoru: kum düşerken en hafif "seçim" tıkları, kayma ve renk değişiminde hafif, kapakta ve yıldızlarda güçlü |
 | Kayıt | Yıldızlar, en iyi yüzde, ayarlar cihazda saklanır (iOS'un silebileceği tarayıcı deposu yerine uygulama tercihleri) |
 | Reklam, satın alma, hesap | Yok. Hiç veri toplanmaz |
 
+Oyun Domino Chase gibi global: mağaza ve oyun adı İngilizce, arayüz İngilizce ve Türkçe.
+
 Varsayılanlar:
 
 | Ayar | Değer |
 |---|---|
-| Uygulama adı | Sandful (App Store başlığı: "Sandful: Kum Sanatı") |
+| Uygulama adı | Sandful (App Store başlığı: "Sandful: Relaxing Sand Art") |
 | Paket kimliği (Bundle ID) | `com.investateknoloji.sandful` |
 | Sürüm | 1.0 (derleme numarası Codemagic'te otomatik artar) |
 | Cihaz | Sadece iPhone, dikey, tam ekran |
@@ -40,9 +42,10 @@ Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek ye
 ### 2. App Store Connect'te uygulama kaydı
 
 1. appstoreconnect.apple.com > Uygulamalar > **+** > Yeni Uygulama.
-   Platform iOS, ad **Sandful: Kum Sanatı**, birincil dil **Türkçe**, Bundle ID yukarıdaki, SKU: `sandful`.
+   Platform iOS, ad **Sandful: Relaxing Sand Art**, birincil dil **İngilizce (ABD)**, Bundle ID yukarıdaki, SKU: `sandful`.
    - Ad App Store'da görünen başlıktır (en fazla 30 karakter); telefonda ikonun altında sadece **Sandful** yazar.
-   - İsim alınmışsa App Store Connect hemen söyler. "Sandful: Rahatlatan Kum Sanatı" dene ve bana yaz.
+   - İsim alınmışsa App Store Connect hemen söyler. "Sandful: Calm Sand Art" dene ve bana yaz.
+   - Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi de ekle. Ad her dilde aynı kalsın (marka); alt başlık ve açıklama çevrilir (`magaza/testflight-metinleri.md`).
 2. Uygulama Bilgileri sayfasındaki **Apple Kimliği**'ni (10 haneli sayı) bana yaz. `codemagic.yaml` içindeki `APP_STORE_APPLE_ID` alanına işleyeceğim.
 
 ### 3. Codemagic
@@ -86,6 +89,12 @@ Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek ye
 3. Xcode'da cihaz olarak **Any iOS Device (arm64)** seç > **Product > Archive** > **Distribute App > App Store Connect > Distribute**.
    Her yüklemede derleme numarası bir öncekinden büyük olmalı: Xcode'da App hedefi > General > **Build** alanını 1 artır.
 4. 10-30 dakika sonra TestFlight'ta görünür.
+
+## Mağazaya çıkarken (TestFlight'tan sonra)
+
+- **Ülkeler:** Fiyatlandırma ve Bulunabilirlik'te bütün ülkeler açık kalabilir (oyun internetsiz, veri toplamıyor). Domino'daki gibi sınırlamak istersen Türkiye, ABD ve Avrupa'yı seç.
+- **Alt başlık (30 karakter):** EN "Pour sand, build calm scenes", TR "Kum dök, sakin manzaralar kur".
+- **Gizlilik:** "Data Not Collected". Gizlilik politikası taslağı `magaza/gizlilik-politikasi.md`.
 
 ## Android deneyiciler için
 

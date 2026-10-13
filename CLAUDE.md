@@ -12,7 +12,7 @@ Rahatlatan, akışı olan, kısa düşündüren mobil oyun fikirleri ve prototip
 
 ## Çalışma şekli
 
-- Konuşma dili Türkçe.
+- Konuşma dili Türkçe. Oyunlar ise global: uygulama adı ve mağaza İngilizce, arayüz İngilizce + Türkçe (telefon diline göre).
 - Yeni bir oyun fikrini koda dökmeden önce tek sayfalık bir açıklama yaz (`fikirler/`) ve Ozer'in onayını al.
   Onaylanmış bir fikri geliştirirken sıfırdan yazmak yerine mevcut dosyayı adım adım iyileştir.
 - Her geri bildirimi ve verilen kararı ilgili fikir dosyasına ve gerekirse `TASARIM-ILKELERI.md`'ye işle.

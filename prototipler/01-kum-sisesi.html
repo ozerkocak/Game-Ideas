@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -113,10 +113,10 @@ button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
   <div class="btns"><button class="btn sec" id="rAgain">Tekrar</button><button class="btn pri" id="rNext">Sonraki</button></div>
 </div>
 <div id="raf">
-  <h1>Rafım</h1>
+  <h1 id="rafH">Rafım</h1>
   <div class="sub" id="rafSub"></div>
   <div id="shelves"></div>
-  <div class="set"><button id="sSnd"></button><button id="sMuz"></button><button id="sKum"></button><button id="sHap"></button></div>
+  <div class="set"><button id="sSnd"></button><button id="sMuz"></button><button id="sKum"></button><button id="sHap"></button><button id="sLang"></button></div>
   <button class="btn sec" id="rafClose">Devam</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -143,6 +143,36 @@ const SKEY='kumSisesi.v3';
 let SAVE={lv:{},snd:true,hap:true,seen:false,kum6:0,muz:true};
 try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(s&&typeof s==='object')SAVE=Object.assign(SAVE,s);}catch(e){}
 function persist(){const v=JSON.stringify(SAVE);try{localStorage.setItem(SKEY,v);}catch(e){}if(PLG.Preferences)PLG.Preferences.set({key:SKEY,value:v}).catch(()=>{});}
+
+// ───────── Dil ─────────
+// Oyun global: telefon Türkçeyse Türkçe, değilse İngilizce; rafta "Dil" düğmesiyle değişir.
+// Metinler kodda Türkçe yazılır, EN sözlüğü çevirir. {0}, {1}: yerine konan değerler.
+const EN={
+ 'Kumsal':'Beach','Tepe':'Hill','Koy':'Cove','Tekne':'Boat','Dağlar':'Mountains','Vadi':'Valley','Çöl':'Desert','Gün batımı':'Sunset','Göl':'Lake','Gece':'Night',
+ 'Basılı tut: kum akar. Bırak: durur. Sürükleyerek huniyi gezdir, kumu silik çizgilere göre düz yay.':'Hold to pour sand, let go to stop. Drag to move the funnel and spread the sand evenly along the faint lines.',
+ 'Sağda biraz bekle: kum yığılır, tepe olur.':'Stay on the right for a while: the sand piles up into a hill.',
+ 'Kumu sağa yığ, deniz solda derin kalsın.':'Pile the sand on the right and keep the sea deep on the left.',
+ 'Kumsal solda yükselir. Deniz bitince tekne gelir: halkanın üstüne getir, parmağını kaldır.':'The beach rises on the left. After the sea comes the boat: bring it over the ring and lift your finger.',
+ 'Önce iki zirveyi yığ. Kar sadece tepelere.':'Build the two peaks first. Snow goes only on the tops.',
+ 'Nehri ortaya dök, yeşili kenarlara yığ.':'Pour the river in the middle and pile the green on the sides.',
+ 'İki kumul yap. Kaktüs birinci kumulun tepesine, güneş göğün ortasına.':'Make two dunes. The cactus goes on top of the first dune, the sun in the middle of the sky.',
+ 'Katmanlar yay gibi: kenarlara daha çok dök, ortası çukur kalsın. Fazla yığılan yeri 💨 ile üfle.':'The layers curve like a smile: pour more at the sides and keep the middle low. Blow away extra sand with 💨.',
+ 'Toprağı sağa yığ, göl solda düz kalsın. Kuğu göle, ağaç tepeye.':'Pile the soil on the right and keep the lake flat on the left. The swan goes on the lake, the tree on the hill.',
+ 'Önce dağlar, sonra gece. Yıldız ve ay gökyüzünün içinde asılı kalsın.':'Mountains first, then the night. The star and the moon hang inside the sky.',
+ 'Bölüm {0}':'Level {0}',' · süslü':' · with decorations','Akış {0}':'Flow {0}','Kusursuz katman!':'Perfect layer!','Güzel katman':'Nice layer',
+ 'Yerine getir, parmağını kaldır':'Move it into place, lift your finger','Tam yerinde! ✨':'Perfect spot! ✨','Biraz kaydı':'A little off',
+ 'Şişe hazır':'Jar finished','Güzel bir şişe':'A lovely jar','Çok güzel!':'Beautiful!','Kusursuz şişe!':'Perfect jar!','benzerlik':'match',
+ 'Bir yıldız için {0} gerekli. Kumu silik çizgilere yakın dök.':'You need {0} for one star. Pour the sand close to the faint lines.',
+ 'İki yıldız için {0}. Parlayan bölgeye dök, ses kesilirse yer değiştir.':'Two stars need {0}. Pour into the glowing area; if the music stops, move.',
+ 'Üçüncü yıldız için süsler halkanın içine düşmeli.':'For the third star, drop the decorations inside their rings.',
+ 'Üçüncü yıldız için {0}.':'The third star needs {0}.','Rafına eklendi.':'Added to your shelf.',' Süs: {0}/{1}.':' Decorations: {0}/{1}.',
+ 'Raf':'Shelf','Sonraki':'Next','Tekrar':'Again','Devam':'Continue','Rafım':'My Shelf','Baştan':'Restart',
+ 'Ses: {0}':'Sound: {0}','Müzik: {0}':'Music: {0}','Kum sesi: {0}':'Sand sound: {0}','Titreşim: {0}':'Haptics: {0}','Dil: {0}':'Language: {0}','açık':'on','kapalı':'off',
+ 'Tıpırtı':'Patter','Kadife':'Velvet','İnce':'Fine','Bu cihazda 3D grafik açılamadı.':'3D graphics could not start on this device.'};
+let LANG='en';
+const langNow=()=>SAVE.lang||((navigator.language||'en').toLowerCase().startsWith('tr')?'tr':'en');
+function t(s,...a){let r=LANG==='en'&&EN[s]!=null?EN[s]:s;a.forEach((v,i)=>{r=r.split('{'+i+'}').join(v);});return r;}
+const pctS=p=>LANG==='tr'?'%'+p:p+'%';
 
 // ───────── Renkler, süsler, bölümler ─────────
 const PAL={kum:'#e8c483',deniz:'#4d93cf',gok:'#b4dcf0',toprak:'#8f6343',cimen:'#86c063',turuncu:'#ef9d55',pembe:'#ec93aa',mor:'#9175c4',
@@ -295,12 +325,12 @@ function startLevel(n,opt={}){clearStars();down=false;activeId=null;
  nextBeat=0;mi=0;melody=makeMelody(!!L.minor,n*7919+13);pct=0;puffs=L.ufle||0;decor=null;holdT=0;settleT=0;popped=false;waveY=-9;sweep=-1;lidY=null;
  resultShown=false;snapped=false;pendingCheck=null;nextTick=0;wavePlayed=[];finalStars=0;
  if(BOT)return;
- $('title').firstChild.innerHTML='<b>'+(n+1)+'</b>'+L.ad;$('hint').textContent=L.ipucu;
+ $('title').firstChild.innerHTML='<b>'+(n+1)+'</b>'+t(L.ad);$('hint').textContent=t(L.ipucu);
  buildQueueBar();lastPct=-1;hudDirty=true;
  ['m1','m2','m3'].forEach((id,k)=>{$(id).style.left=STAR_TH[k]+'%';$(id).classList.remove('on');});
  $('result').classList.remove('show');
  $('bPuff').style.display=puffs>0?'block':'none';updatePuffBtn();
- const bn=$('banner');bn.querySelector('.bt').textContent=L.ad;bn.querySelector('.bs').textContent='Bölüm '+(n+1)+(L.sus?' · süslü':'');
+ const bn=$('banner');bn.querySelector('.bt').textContent=t(L.ad);bn.querySelector('.bs').textContent=t('Bölüm {0}',n+1)+(L.sus?t(' · süslü'):'');
  bn.classList.add('show');clearTimeout(bn._t);bn._t=setTimeout(()=>bn.classList.remove('show'),1900);
  $('hand').classList.toggle('show',n===0||!SAVE.seen);
  ambient(L.ortam);if(RD)gfxLevel();}
@@ -327,7 +357,7 @@ function step(){
  if(landed>0){const c=colOf(landX);onTarget=tTop[landC][c]-topY[c]>-TOL*1.5;
   if(onTarget){streakT+=DT;offT=0;}else{offT+=DT;if(offT>.45)streakT=0;}}
  const nl=streakT>=14?3:streakT>=8?2:streakT>=3?1:0;
- if(nl>streakLvl&&!BOT){toast('Akış '+'♪'.repeat(nl));vib(12);}
+ if(nl>streakLvl&&!BOT){toast(t('Akış {0}','♪'.repeat(nl)));vib(12);}
  streakLvl=nl;
  slideFlux*=.9;
  if(BOT)return;
@@ -354,7 +384,7 @@ function itemDone(it){const nx=queue[qi];
  if(!queue.slice(qi).some(q=>q.t==='kum'&&q.c===it.c))pendingCheck={c:it.c,at:T+.6};
  if(nx&&nx.t==='kum'&&nx.c!==it.c&&!BOT){ding();vib(18);}}
 function layerCheck(c){pct=score();if(BOT)return;const a=layerScore[c];
- if(a>=.9){toast('Kusursuz katman!');chord(1);vib(20);}else if(a>=.78){toast('Güzel katman');chord(.6);}}
+ if(a>=.9){toast(t('Kusursuz katman!'));chord(1);vib(20);}else if(a>=.78){toast(t('Güzel katman'));chord(.6);}}
 // Benzerlik: her sütunda her katmanın üst çizgisi silik çizgiye ne kadar uzak? TOL'a kadar tam puan, TOL+SCALE'de sıfır.
 // Süsler puanı bozmaz; yeri ayrıca halkayla değerlendirilir.
 function score(){let tot=0;layerScore=new Array(ncol).fill(0);const acc=new Float32Array(ncol);
@@ -370,7 +400,7 @@ function starsFor(p){p=Math.round(p);let s=p>=STAR_TH[2]?3:p>=STAR_TH[1]?2:p>=ST
 // ───────── Süsler ─────────
 // Süs huninin altında asılı gelir; sürükleyerek yerine getirip parmağını kaldırınca düşer.
 function beginHold(rec){state='hold';holdT=0;decor={rec,x:noz,y:0,vy:0,held:true};decorFollow();
- if(!BOT){toast('Yerine getir, parmağını kaldır');softBell();}}
+ if(!BOT){toast(t('Yerine getir, parmağını kaldır'));softBell();}}
 function decorFollow(){const D=decor.rec.D;decor.x=noz;decor.y=FUNY-D.h-.03;}
 function releaseDecor(){if(state!=='hold')return;state='drop';decor.held=false;decor.vy=.3;}
 function decorLandY(){const D=decor.rec.D,c0=colOf(decor.x-D.w/2),c1=colOf(decor.x+D.w/2);let m=0;for(let c=c0;c<=c1;c++)if(valid[c])m=Math.max(m,topY[c]);return m;}
@@ -379,7 +409,7 @@ function landDecor(){const r=decor.rec,D=r.D,c0=colOf(decor.x-D.w/2),c1=colOf(de
  const la=Math.min(ncol-1,r.s.oran>=1?r.k+1:r.k);
  for(let c=c0;c<=c1;c++)if(valid[c])addTop(c,100+la,ly+D.h-topY[c]);
  r.ok=Math.abs(decor.x-r.zx)<=.08&&Math.abs(ly+D.h/2-r.zy)<=.17;r.placed=true;r.wx=decor.x;r.wy=ly;
- if(!BOT){thunk();vib(40);if(r.ok){toast('Tam yerinde! ✨');chime();}else toast('Biraz kaydı');gfxDecorPlaced(r);}
+ if(!BOT){thunk();vib(40);if(r.ok){toast(t('Tam yerinde! ✨'));chime();}else toast(t('Biraz kaydı'));gfxDecorPlaced(r);}
  decor=null;qi++;state='pour';pourStart=T+.1;}
 
 // ───────── Üfleme ─────────
@@ -408,16 +438,16 @@ function saveResult(){const r=SAVE.lv[LV]||{p:0,s:0};const p=Math.round(pct);
  if(p>=r.p){const im=snapshot();if(im)r.img=im;r.p=p;}r.s=Math.max(r.s||0,finalStars);SAVE.lv[LV]=r;persist();}
 function showResult(){
  const p=Math.round(pct),s=finalStars;
- $('rTitle').textContent=['Şişe hazır','Güzel bir şişe','Çok güzel!','Kusursuz şişe!'][s];
- $('rPct').innerHTML='%'+p+' <small>benzerlik</small>';
+ $('rTitle').textContent=t(['Şişe hazır','Güzel bir şişe','Çok güzel!','Kusursuz şişe!'][s]);
+ $('rPct').innerHTML=pctS(p)+' <small>'+t('benzerlik')+'</small>';
  const stars=[...$('rStars').children];stars.forEach(e=>e.classList.remove('on'));
  stars.forEach((e,k)=>{if(k<s)starTimers.push(setTimeout(()=>{e.classList.add('on');starPop(k);vib(25);},380+k*360));});
- let msg=s===0?'Bir yıldız için %'+STAR_TH[0]+' gerekli. Kumu silik çizgilere yakın dök.':
-  s<2?'İki yıldız için %'+STAR_TH[1]+'. Parlayan bölgeye dök, ses kesilirse yer değiştir.':
-  s<3?(p>=STAR_TH[2]&&decorList.some(d=>!d.ok)?'Üçüncü yıldız için süsler halkanın içine düşmeli.':'Üçüncü yıldız için %'+STAR_TH[2]+'.'):'Rafına eklendi.';
- if(decorList.length)msg+=' Süs: '+decorList.filter(d=>d.ok).length+'/'+decorList.length+'.';
+ let msg=s===0?t('Bir yıldız için {0} gerekli. Kumu silik çizgilere yakın dök.',pctS(STAR_TH[0])):
+  s<2?t('İki yıldız için {0}. Parlayan bölgeye dök, ses kesilirse yer değiştir.',pctS(STAR_TH[1])):
+  s<3?(p>=STAR_TH[2]&&decorList.some(d=>!d.ok)?t('Üçüncü yıldız için süsler halkanın içine düşmeli.'):t('Üçüncü yıldız için {0}.',pctS(STAR_TH[2]))):t('Rafına eklendi.');
+ if(decorList.length)msg+=t(' Süs: {0}/{1}.',decorList.filter(d=>d.ok).length,decorList.length);
  $('rMsg').textContent=msg;
- const last=LV>=LEVELS.length-1;$('rNext').textContent=last?'Raf':'Sonraki';$('rNext').disabled=!last&&s<1;
+ const last=LV>=LEVELS.length-1;$('rNext').textContent=t(last?'Raf':'Sonraki');$('rNext').disabled=!last&&s<1;
  $('result').classList.add('show');}
 </script>
 <script>
@@ -470,7 +500,7 @@ const SND={
  ince:{sec:4.4,kind:'sin',rate:2400,f0:900,f1:2800,u0:.0012,u1:.0025,sig:.4,gw:1,bw:.35,bhp:500,blp:2400,hp:300,lp:3800},
  cam:{sec:3.3,kind:'ring',rate:110,f0:1700,f1:4200,u0:.02,u1:.08,sig:.5,gw:1,hp:600,lp:6000},
  kay:{sec:3.7,bw:1,bhp:300,blp:1400,mod:.45,modHz:4,mod2:.2,mod2Hz:1.1,hp:200,lp:3000}};
-const KUM_SES=['tipirti','kadife','ince'],KUM_AD=['Tıpırtı','Kadife','İnce'];
+const KUM_SES=['tipirti','kadife','ince'],KUM_AD=['Tıpırtı','Kadife','İnce']; // ekranda t() ile
 const kumAdi=()=>KUM_SES[SAVE.kum6|0]||'tipirti';
 function sndNeed(names){names.forEach(nm=>{if(!sndCache[nm]&&!sndQ.includes(nm)&&!(sndJob&&sndJob.nm===nm))sndQ.push(nm);});if(!sndJob)sndNext();}
 function sndNext(){const nm=sndQ.shift();if(!nm){sndJob=null;return;}const g=grainGen(SND[nm]);
@@ -1030,7 +1060,7 @@ function buildQueueBar(){const q=$('queue');q.innerHTML='';queue.forEach(it=>{co
  if(it.t==='kum'){e.className='seg';e.style.flexGrow=Math.round(it.a0*1000);e.style.background=PAL[L.katman[it.c][0]];e.innerHTML='<div class="f"></div>';}
  else{e.className='chip';e.textContent=it.rec.D.e;}it.el=e;q.appendChild(e);});}
 function updateHud(){const p=Math.round(pct);
- if(p!==lastPct){lastPct=p;$('pct').textContent='%'+p;$('pfill').style.width=p+'%';['m1','m2','m3'].forEach((id,k)=>$(id).classList.toggle('on',p>=STAR_TH[k]));}
+ if(p!==lastPct){lastPct=p;$('pct').textContent=pctS(p);$('pfill').style.width=p+'%';['m1','m2','m3'].forEach((id,k)=>$(id).classList.toggle('on',p>=STAR_TH[k]));}
  queue.forEach((it,k)=>{if(!it.el)return;it.el.classList.toggle('cur',k===qi&&state!=='finale'&&state!=='result');
   if(it.t==='kum'){const f=k<qi?1:k>qi?0:1-it.a/it.a0,fe=it.el.firstChild,w=(f*100).toFixed(1)+'%';if(fe.style.width!==w)fe.style.width=w;}
   else it.el.classList.toggle('done',k<qi);});}
@@ -1041,11 +1071,11 @@ function openRaf(){clearStars();if(state!=='menu'){prevState=state;state='menu';
   for(let k=r;k<Math.min(r+3,LEVELS.length);k++){const rec=SAVE.lv[k],open=k===0||(SAVE.lv[k-1]&&SAVE.lv[k-1].s>=1),s=rec?rec.s:0;total+=s;
    if(open&&!rec&&nextIdx<0)nextIdx=k;
    const b=document.createElement('button');b.className='slot'+(open?'':' lock')+(k===nextIdx?' next':'');
-   b.innerHTML='<div class="jar">'+(rec&&rec.img?'<img alt="" src="'+rec.img+'">':'<div class="empty">'+(open?(k+1):'🔒')+'</div>')+'</div><div class="nm">'+(k+1)+' · '+LEVELS[k].ad+'</div><div class="st">'+'★'.repeat(s)+'<i>'+'★'.repeat(3-s)+'</i></div>';
+   b.innerHTML='<div class="jar">'+(rec&&rec.img?'<img alt="" src="'+rec.img+'">':'<div class="empty">'+(open?(k+1):'🔒')+'</div>')+'</div><div class="nm">'+(k+1)+' · '+t(LEVELS[k].ad)+'</div><div class="st">'+'★'.repeat(s)+'<i>'+'★'.repeat(3-s)+'</i></div>';
    if(open)b.onclick=()=>{closeRaf(true);startLevel(k);};row.appendChild(b);}
   sh.appendChild(row);}
  $('rafSub').textContent=total+' / '+LEVELS.length*3+' ★';
- $('sSnd').textContent='Ses: '+(SAVE.snd===false?'kapalı':'açık');$('sMuz').textContent='Müzik: '+(SAVE.muz===false?'kapalı':'açık');$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kum6|0];$('sHap').textContent='Titreşim: '+(SAVE.hap===false?'kapalı':'açık');
+ setTexts();
  $('rafClose').style.display=prevState&&L?'block':'none';$('raf').classList.add('show');}
 function closeRaf(skip){$('raf').classList.remove('show');if(!skip&&prevState){state=prevState;if(state==='result')$('result').classList.add('show');}prevState=null;}
 
@@ -1066,10 +1096,18 @@ $('bPuff').onclick=()=>puff();
 $('rAgain').onclick=()=>startLevel(LV);
 $('rNext').onclick=()=>{if(LV>=LEVELS.length-1){prevState=null;openRaf();}else startLevel(LV+1);};
 $('rafClose').onclick=()=>closeRaf();
-$('sSnd').onclick=()=>{SAVE.snd=SAVE.snd===false;persist();if(master)master.gain.value=SAVE.snd?.75:0;$('sSnd').textContent='Ses: '+(SAVE.snd?'açık':'kapalı');};
-$('sMuz').onclick=()=>{SAVE.muz=SAVE.muz===false;persist();if(musicBus)musicBus.gain.value=SAVE.muz?1:0;$('sMuz').textContent='Müzik: '+(SAVE.muz?'açık':'kapalı');};
-$('sKum').onclick=()=>{initAudio();SAVE.kum6=((SAVE.kum6|0)+1)%3;persist();$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kum6];sndNeed([kumAdi()]);attachPour();previewKum();};
-$('sHap').onclick=()=>{SAVE.hap=SAVE.hap===false;persist();$('sHap').textContent='Titreşim: '+(SAVE.hap?'açık':'kapalı');if(SAVE.hap)vib(20);};
+$('sSnd').onclick=()=>{SAVE.snd=SAVE.snd===false;persist();if(master)master.gain.value=SAVE.snd?.75:0;setTexts();};
+$('sMuz').onclick=()=>{SAVE.muz=SAVE.muz===false;persist();if(musicBus)musicBus.gain.value=SAVE.muz?1:0;setTexts();};
+$('sKum').onclick=()=>{initAudio();SAVE.kum6=((SAVE.kum6|0)+1)%3;persist();setTexts();sndNeed([kumAdi()]);attachPour();previewKum();};
+$('sHap').onclick=()=>{SAVE.hap=SAVE.hap===false;persist();setTexts();if(SAVE.hap)vib(20);};
+$('sLang').onclick=()=>{SAVE.lang=LANG==='tr'?'en':'tr';persist();setTexts();openRaf();};
+// sabit metinler ve ayar düğmeleri seçili dilde; bölüm açıksa başlık ve ipucu da
+function setTexts(){LANG=langNow();document.documentElement.lang=LANG;const oo=v=>t(v===false?'kapalı':'açık');
+ $('sSnd').textContent=t('Ses: {0}',oo(SAVE.snd));$('sMuz').textContent=t('Müzik: {0}',oo(SAVE.muz));$('sKum').textContent=t('Kum sesi: {0}',t(KUM_AD[SAVE.kum6|0]));
+ $('sHap').textContent=t('Titreşim: {0}',oo(SAVE.hap));$('sLang').textContent=t('Dil: {0}',LANG==='tr'?'Türkçe':'English');
+ $('rafH').textContent=t('Rafım');$('rafClose').textContent=t('Devam');$('rAgain').textContent=t('Tekrar');$('gfxErr').textContent=t('Bu cihazda 3D grafik açılamadı.');
+ $('bRaf').setAttribute('aria-label',t('Raf'));$('bRe').setAttribute('aria-label',t('Baştan'));
+ if(L){$('title').firstChild.innerHTML='<b>'+(LV+1)+'</b>'+t(L.ad);$('hint').textContent=t(L.ipucu);lastPct=-1;}}
 function setBg(bg){if(bg){pouring=false;down=false;activeId=null;hapEnd();if(AC)AC.suspend().catch(()=>{});}else if(AC)AC.resume().catch(()=>{});}
 document.addEventListener('visibilitychange',()=>setBg(document.hidden));if(PLG.App)PLG.App.addListener('appStateChange',st=>setBg(!st.isActive));
 
@@ -1118,7 +1156,7 @@ window.__game={setTS:v=>{TS=v;},sim:ms=>{const n=Math.round(ms/1000/DT);for(let 
 
 // İlk açılış: menü yok, doğrudan 1. bölüm. Sonraki açılışlar raf.
 initGfx();resize();
-function boot(){sndStart();if(!SAVE.seen)startLevel(0);else{startLevel(Math.min(LEVELS.length-1,Object.keys(SAVE.lv).length));openRaf();prevState=null;$('rafClose').style.display='none';}}
+function boot(){setTexts();sndStart();if(!SAVE.seen)startLevel(0);else{startLevel(Math.min(LEVELS.length-1,Object.keys(SAVE.lv).length));openRaf();prevState=null;$('rafClose').style.display='none';}}
 // iki kopyadan (tarayıcı deposu, uygulama tercihleri) her bölüm için en iyi sonucu al; biri kaybolsa da ilerleme gitmez
 function mergeSave(v){if(!v||typeof v!=='object')return;const lv=Object.assign({},SAVE.lv);for(const k in v.lv||{}){const a=lv[k],b=v.lv[k];if(!b)continue;if(!a){lv[k]=b;continue;}
  lv[k]={p:Math.max(a.p||0,b.p||0),s:Math.max(a.s||0,b.s||0),img:(b.p||0)>(a.p||0)?(b.img||a.img):(a.img||b.img)};}SAVE=Object.assign(SAVE,v,{lv,seen:!!(SAVE.seen||v.seen)});}

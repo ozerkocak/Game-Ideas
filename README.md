@@ -9,4 +9,4 @@ Telefonda oynanan, oyuncuyu yormadan rahatlatan, akışı olan ve kısa düşün
 - `prototipler/`: Onaylanan fikirlerin tek dosyalık HTML prototipleri. Telefonda tarayıcıda açılarak oynanır.
   - `01-kum-sisesi.html`: Kum Şişesi, 10 bölüm, 3D (three.js), tane tane kum görüntüsü ve sentezlenmiş kum sesi. Tasarım ve bot sonuçları: `fikirler/02-kum-sisesi.md`.
 - `uygulamalar/`: Uygulamaya dönüşen oyunlar (Capacitor; iOS ve Android).
-  - `sandful/`: Sandful (Kum Şişesi prototipinin uygulama adı) uygulama paketi. TestFlight'a çıkış: `uygulamalar/sandful/TESTFLIGHT.md`. Bulut derleme: kökteki `codemagic.yaml`.
+  - `sandful/`: Sandful (Kum Şişesi prototipinin uygulama adı) uygulama paketi. Global: İngilizce ve Türkçe. TestFlight'a çıkış: `uygulamalar/sandful/TESTFLIGHT.md`. Bulut derleme: kökteki `codemagic.yaml`.

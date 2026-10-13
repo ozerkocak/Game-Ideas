@@ -1,11 +1,11 @@
 # npx cap add ios sonrası iOS projesine bizim ayarlarımızı uygular (tekrar çalıştırılabilir).
-# Sadece dikey, sadece iPhone, tam ekran, durum çubuğu gizli, şifreleme sorusu "hayır", dil Türkçe.
+# Sadece dikey, sadece iPhone, tam ekran, durum çubuğu gizli, şifreleme sorusu "hayır", diller İngilizce (ana) ve Türkçe.
 # Ses oturumu "ambient": kullanıcının çaldığı müzik kesilmez, sessiz anahtarına uyar.
 import plistlib,re,os
 root=os.path.join(os.path.dirname(__file__),'..','ios','App')
 p=os.path.join(root,'App','Info.plist');d=plistlib.load(open(p,'rb'))
-d['CFBundleDevelopmentRegion']='tr'
-d['CFBundleLocalizations']=['tr']
+d['CFBundleDevelopmentRegion']='en'
+d['CFBundleLocalizations']=['en','tr']
 d['CFBundleDisplayName']='Sandful'
 d['UISupportedInterfaceOrientations']=['UIInterfaceOrientationPortrait']
 d.pop('UISupportedInterfaceOrientations~ipad',None)

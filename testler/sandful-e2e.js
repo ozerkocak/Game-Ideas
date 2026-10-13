@@ -3,14 +3,15 @@
 // Kullanım: node testler/sandful-e2e.js [html dosyası]   (varsayılan: prototip; uygulama derlemesi için uygulamalar/sandful/www/index.html)
 // Ortam değişkeni THREE ile three.min.js yolu verilebilir; verilmezse uygulama paketinin node_modules'ü denenir.
 // Denetler: ilk açılış, 10 bölüm baştan sona (insan botu), süreler, kayıt ve küçük resimler, bellek (ikinci tur), yeniden açılış (raf),
-// raf/yeniden başlat/süs/final/sonuç/iptal/üfleme/arka plan uç durumları, 3D'siz çalışma, uygulama içi (sahte Capacitor) titreşim, kayıt, duraklatma.
+// raf/yeniden başlat/süs/final/sonuç/iptal/üfleme/arka plan uç durumları, 3D'siz çalışma, uygulama içi (sahte Capacitor) titreşim, kayıt, duraklatma,
+// dil (İngilizce telefonda Türkçe harf kalmaz, Türkçe telefonda Türkçe, raftan değişir ve kaydedilir).
 const {chromium}=require('playwright');const fs=require('fs');const path=require('path');
 const ROOT=path.join(__dirname,'..');
 const FILE=path.resolve(process.argv[2]||path.join(ROOT,'prototipler','01-kum-sisesi.html'));
 const THREE=process.env.THREE||path.join(ROOT,'uygulamalar','sandful','node_modules','three','build','three.min.js');
 const results=[];const ok=(name,cond,info)=>{results.push({name,ok:!!cond,info});console.log((cond?'✓ ':'✗ ')+name+(info!==undefined?' — '+(typeof info==='string'?info:JSON.stringify(info)):''));};
 async function launch(opts={}){const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--enable-precise-memory-info','--js-flags=--expose-gc']});
- const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
+ const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:opts.locale||'en-US'});
  if(opts.native)await ctx.addInitScript(()=>{const log=window.__nlog=[];const mk=nm=>new Proxy({},{get:(t,k)=>(...a)=>{log.push(nm+'.'+String(k));
    if(nm==='Preferences'&&k==='get')return Promise.resolve({value:window.__prefVal||null});if(nm==='Preferences'&&k==='set'){window.__prefVal=a[0].value;}
    if(nm==='App'&&k==='addListener'){window.__appCb=a[1];return Promise.resolve({remove(){}});}return Promise.resolve();}});
@@ -93,4 +94,17 @@ async function launch(opts={}){const b=await chromium.launch({args:['--use-angle
   ok('Uygulamada kayıt Preferences eklentisine de yazılır ve açılışta okunur',r.prefSet&&r.prefGet,r);
   ok('Uygulama arka plana geçince (App eklentisi) duraklar',r.appL&&r.pouringAfterPause===false,r);
   ok('Uygulama modunda sayfa hatası yok',errs.length===0,errs.slice(0,3));await b.close();}
+ // 5) dil: İngilizce/Almanca telefonda İngilizce (Türkçe harf yok), Türkçe telefonda Türkçe, raftaki düğmeyle değişir ve kalır
+ {const trChars=/[ğüşıöçĞÜŞİÖÇ]/;
+  for(const loc of ['en-US','de-DE','tr-TR']){const {b,p,errs}=await launch({locale:loc,no3d:true});
+   const r=await p.evaluate(()=>{const got=new Set();const orig=toast;window.toast=s=>{got.add(s);orig(s);};__game.setTS(0);
+    for(const lv of [0,3,7,9]){__game.start(lv);__game.autoplay('insan');__game.begin();let k=0;while(k<4000&&__game.state().state!=='result'){__game.sim(50);k++;}__game.autoplay(null);}
+    const res=document.body.innerText;openRaf();
+    return {lang:LANG,html:document.documentElement.lang,lines:[...got,...(res+'\n'+document.body.innerText).split('\n')].map(l=>l.trim()).filter(Boolean),rafH:document.getElementById('rafH').textContent};});
+   if(loc==='tr-TR')ok('Türkçe telefonda oyun Türkçe',r.lang==='tr'&&r.html==='tr'&&r.rafH==='Rafım',{lang:r.lang,rafH:r.rafH});
+   else{const bad=r.lines.filter(l=>trChars.test(l));ok(loc+' telefonda oyun İngilizce, Türkçe harfli metin yok',r.lang==='en'&&r.html==='en'&&r.rafH==='My Shelf'&&bad.length===0,{lang:r.lang,rafH:r.rafH,tr:bad.slice(0,5)});}
+   if(loc==='tr-TR'){await p.evaluate(()=>document.getElementById('sLang').click());await p.waitForTimeout(200);await p.reload();await p.waitForTimeout(1200);
+    const after=await p.evaluate(()=>({lang:LANG,rafH:document.getElementById('rafH').textContent,btn:document.getElementById('sLang').textContent}));
+    ok('Raftaki dil düğmesi dili değiştirir, yeniden açılışta kalır',after.lang==='en'&&after.rafH==='My Shelf'&&/English/.test(after.btn),after);}
+   ok(loc+' dilinde sayfa hatası yok',errs.length===0,errs.slice(0,3));await b.close();}}
  const bad=results.filter(x=>!x.ok);console.log('\n'+(results.length-bad.length)+'/'+results.length+' geçti');process.exit(bad.length?1:0);})();

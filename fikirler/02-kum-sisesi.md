@@ -15,7 +15,7 @@ Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kara
 | Ses | Tanıdık şarkı yerine her bölüme özel sakin, pentatonik bir melodi | Hedef rahatlatmak. Domino Chase'te beğenilen "şekilden sapınca şarkı durur" hissi korundu: kum doğru yere düştükçe melodi akar, saparsan susar |
 | Ortam sesi | Deniz, rüzgâr, gece (cırcır böcekleri) | Rahatlamayı asıl ortam sesi taşır |
 | Görsel | three.js yok; 2D tanecik ve ışık-gölge | Kumun dokusu tanecik tanecik görünmeli. Silindir gölgesi, cam parlaklığı, ağız elipsi ve raf gölgesiyle 3D hissi veriliyor |
-| Dil | Sadece Türkçe | Prototip. Uygulamaya geçerken İngilizce eklenir |
+| Dil | Sadece Türkçe | Prototip. Uygulamaya geçerken İngilizce eklenir (sürüm 7'de eklendi: oyun global) |
 
 ## Çekirdek döngü (bir bölüm 23-34 sn)
 
@@ -503,11 +503,12 @@ Ama oyunu değiştirir:
 | Bölüm başına bellek sızıntısı (kapak geometrileri, süs malzemeleri) | Uzun oturumda bellek artışı | Bölüm değişince temizlenir |
 | Ekran belleği (iki çoklu örneklemeli tampon, piksel oranı 2,5) | Eski iPhone'larda bellek riski | Kenar yumuşatma sadece ara dokuda, piksel oranı en fazla 2 |
 
-### Uçtan uca test (`testler/kum-sisesi-e2e.js`): 22/22
+### Uçtan uca test (`testler/sandful-e2e.js`): 29/29
 
 İlk açılış; 10 bölüm baştan sona (süreler 21-35 sn); kayıt ve küçük resimler; ikinci turda bellek büyümüyor; yeniden açılışta raf;
 döküşte, süs tutarken ve finalde raf aç/kapat; süs tutarken yeniden başlat; sonuç ekranında dokunma; dokunma iptali; üfleme sınırı; arka plana geçiş;
-3D açılamazsa oyun yine oynanır; uygulama içi (sahte Capacitor) titreşim, kayıt ve duraklatma. Aynı takım uygulama derlemesi (`www/index.html`) üzerinde de geçti.
+3D açılamazsa oyun yine oynanır; uygulama içi (sahte Capacitor) titreşim, kayıt ve duraklatma;
+dil (İngilizce ve Almanca telefonda İngilizce, Türkçe harf kalmıyor; Türkçe telefonda Türkçe; raftan değişir, kalır). Aynı takım uygulama derlemesi (`www/index.html`) üzerinde de geçti.
 
 ### Bot tablosu (sürüm 7; tavan ve yuvarlama sonrası)
 
@@ -528,8 +529,20 @@ döküşte, süs tutarken ve finalde raf aç/kapat; süs tutarken yeniden başla
 Ozer TestFlight'tan önce "uygulamaya güzel bir isim bulalım" dedi; seçeneklerden **Sandful**'u seçti.
 
 - Anlamı: sand + mindful (bilinçli, sakin) ve handful (avuç dolusu). Kısa, akılda kalıcı, oyunun "rahatlatan" vaadini taşıyor.
-- App Store başlığı: "Sandful: Kum Sanatı" (alınmışsa "Sandful: Rahatlatan Kum Sanatı"); telefonda ikonun altında "Sandful".
+- App Store başlığı: ~~"Sandful: Kum Sanatı"~~ → "Sandful: Relaxing Sand Art" (aşağıda: oyun global); telefonda ikonun altında "Sandful".
 - Paket kimliği: `com.investateknoloji.sandful`. Uygulama klasörü `uygulamalar/sandful/`. Prototip dosyası `prototipler/01-kum-sisesi.html` olarak kaldı.
 - Araştırma: "Sand Bottles", "Sand Pour", "Sand Sort" gibi düz adlar App Store'da kalabalık; Steam'de benzer konulu "Sandkeeper" (2026 sonu) var.
   Sandful, Jarscape ve Grain & Glass adıyla uygulama bulunamadı. Diğer adaylar: Jarscape (kavanozda manzara), Grain & Glass.
-- Oyun şimdilik sadece Türkçe; İngilizce arayüz eklenince App Store'a İngilizce yerelleştirme eklenir.
+- ~~Oyun şimdilik sadece Türkçe.~~ Yerine aşağıdaki karar geçti.
+
+### Oyun global (İngilizce + Türkçe)
+
+Ozer: "sadece Türkiye için olmasın, oyun Domino gibi global olsun. İsim vs de ona göre olsun. Sandful: Kum Sanatı yaparsak sadece TR olur."
+
+- **Mağaza:** birincil dil İngilizce (ABD), başlık **"Sandful: Relaxing Sand Art"** (alınmışsa "Sandful: Calm Sand Art").
+  Türkçe yerelleştirmede ad aynı kalır (marka); alt başlık EN "Pour sand, build calm scenes", TR "Kum dök, sakin manzaralar kur".
+- **Oyun içi dil:** telefon Türkçeyse Türkçe, değilse İngilizce. Raftaki "Dil / Language" düğmesiyle değişir, seçim kaydedilir.
+  Bölüm adları (Beach, Hill, Cove, Boat, Mountains, Valley, Desert, Sunset, Lake, Night), ipuçları, sonuç mesajları, raf ve ayarlar çevrildi.
+  Yüzde gösterimi dile göre: TR "%92", EN "92%".
+- **iOS:** `CFBundleDevelopmentRegion` en, `CFBundleLocalizations` [en, tr]. Telefonda ikonun altında her dilde "Sandful".
+- Mağaza metinleri iki dilde: `uygulamalar/sandful/magaza/testflight-metinleri.md`.

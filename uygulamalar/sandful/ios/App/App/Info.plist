@@ -5,7 +5,7 @@
 	<key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>tr</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>Sandful</string>
 	<key>CFBundleExecutable</key>
@@ -16,6 +16,7 @@
 	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
 	<array>
+		<string>en</string>
 		<string>tr</string>
 	</array>
 	<key>CFBundleName</key>
