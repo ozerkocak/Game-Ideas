@@ -51,6 +51,10 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | Katman sınırları tane ölçeğinde keskin olmalı. Renkleri karıştırarak (doğrusal süzme) çizmek sınırı kirli ve bulanık gösterir; her pikselde tane merkezinin hangi katmanda olduğuna bak | Kum Şişesi sürüm 3 → 4 |
 | Boğuk ses = enerjinin çoğu 500 Hz altında. Kum ve tane sesi 1,5-6 kHz'de toplanmalı: binlerce kısa rezonans, hafif yankı. Sesi duyamıyorsan spektrumunu ölç | Kum Şişesi sürüm 3 → 4 |
 | Camı gerçekçi gösteren yansıma değil kırılma: arkadaki görüntü kenarlara doğru hafifçe bükülür ve kalın yerde biraz kararır. Kırılmayı abartma, kenardaki kum uzayıp halka halka görünür | Kum Şişesi sürüm 4 |
+| Akan ince bir şeyi (kum, su) sabit kalınlıkta düz şerit çizme: yuvarlak gölgele, dokusu düşüşle aynı hızda aksın, uçları akış hızıyla incelsin, kıvrılınca eğriyle doldur, çevresinden tane koparsın | Kum Şişesi sürüm 4 → 5 |
+| Yüzeyde kayan taneler yüzeyle aynı renkteyse görünmez; bir ton açık yap. Çarpmayı küçük bir sıçrama tacıyla göster | Kum Şişesi sürüm 5 |
+| Ses geri bildirimi belirsizse tahminle değiştirmeye devam etme: oyunun içine seçenek koy (rafta kum sesi, müzik ayrı kapatılır), Ozer hangisini seçtiğini söylesin | Kum Şişesi sürüm 5 |
+| Sürekli çalan döngü sesin tekrarı duyulur; uzun tampon ve iki çalarla (farklı yer, farklı hız) tekrarı kır | Kum Şişesi sürüm 5 |
 
 ## Reddedilmiş yönler
 

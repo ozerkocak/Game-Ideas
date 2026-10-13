@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 4:** tane tane kum görüntüsü ve keskin katman sınırları, kırılan cam, yeni kum sesi, titreşim haritası. Sürüm 2-4 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
+**Güncel sürüm 5:** gerçekçi huni akışı ve çarpma, seçilebilir kum sesi, renk ayarı ve kâğıt konfeti. Sürüm 2-5 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -351,3 +351,61 @@ Fizik ve puan değişmedi; sürüm 3'ün bot tablosu geçerli. Kontrol için yen
 1. Katman sınırları artık temiz mi? Kum dokusu (tanelerin iriliği, koyu-beyaz benekler) hoşuna gidiyor mu?
 2. Yeni kum sesi rahatlatıyor mu? Kum cama düşerken çıkan tıngırtı ve arkadaki ped hoş mu, fazla mı?
 3. Hâlâ "bir şeyler eksik" diyorsan en çok neyi hissediyorsun: akışın kendisi mi, sonuç anı mı, müzik mi?
+
+## Sürüm 5: huniden akış, kum sesi seçimi, renk ayarı
+
+Geri bildirim: "Ses konusunda bence hâlâ sıkıntı var. Kumun döküldüğü küçük şeyden dökülme efekti iyi değil, orayı daha gerçekçi yapalım. Grafiklerde gelişme var ama daha iyisini yapabiliriz."
+
+### Huniden akış ve çarpma
+
+Sürüm 4'te akış örgülü bir ip gibi görünüyordu (sabit kalınlık, yavaş kayan doku) ve kuma saplanmış bir çubuk gibi bitiyordu; çarpmada sıçrama, yamaçta akan tane yoktu.
+
+| Konu | Sürüm 5 |
+|---|---|
+| Şekil | Yuvarlak kum sütunu: ışık soldan, sol yanı aydınlık, sağı gölgede. Huniden çıkınca biraz daralır, aşağı indikçe açılır |
+| Doku | İki kat tane izi, düşüşle aynı hızda aşağı akar (hareketten uzamış); nadir ışıltı. Huniden uzaklaştıkça kenar tane tane dağılır |
+| Uçlar | Kalınlık döküş hızına bağlı: basınca ince başlar, bırakınca kuyruk incelerek huniden kopar. Daha kuma değmemiş baş yuvarlak |
+| Eğri | Huni hareket edince akış kıvrılır; noktalar arası eğriyle doldurulur, kalınlık hep akışa dik (kırık çizgi yok) |
+| Kopan taneler | Akışın çevresinde tek tük taneler, aşağıda çoğalır |
+| Çarpma | Vurduğu yerden küçük bir taç gibi her yöne sıçrayan taneler; yamaçtan tepeden dışa yayılarak akan, biraz parlak taneler (kumla aynı renkte olunca görünmüyorlardı) |
+| Cam ağzı | Ön cam çiziminde camın iç yüzü de çiziliyordu; akış eğikken ağızda kırılmış görünüyordu. Artık sadece dış yüz |
+
+### Ses
+
+Ozer neyin rahatsız ettiğini söylemedi; o yüzden seçenek koydum ve olası sebepleri birlikte düzelttim:
+- **Kum sesi rafta seçilir:** Yumuşak (yeni varsayılan), Parlak (sürüm 4), Çıtır. Değiştirince 1,5 saniyelik bir örnek çalar.
+
+| Kum sesi | Merkez frekans | 500 Hz altı | Tepe / ortalama | Karakter |
+|---|---|---|---|---|
+| Yumuşak | 2,1 kHz | %4,4 | 6,8 | Sıcak hışırtı, altında seyrek taneler, hafif dalgalanır |
+| Parlak | 3,1 kHz | %0,9 | 9,4 | Sürüm 4'teki yoğun tane sesi |
+| Çıtır | 3,1 kHz | %0,5 | 17,6 | Seyrek ama belirgin taneler (ASMR gibi) |
+
+- Döngü tekrarı: her ses tek bir 2,2 sn'lik döngüydü; kulak tekrarı yakalayabilir. Artık 3,3-4,4 sn'lik tampon, iki çalardan farklı yer ve hızda çalınıyor; tekrar duyulmuyor.
+- Cama düşüş tıngırtısı daha pes ve sessiz (üst sınır 9,5 → 7 kHz), kayma sesi sürekli tam açık kalıyordu, artık kayan kum kadar.
+- Melodi daha seyrek (notalar 0,34 → 0,5 sn arayla) ve daha sessiz; ped de biraz kısıldı. Kumdaki yankı azaldı.
+- **Müzik rafta ayrıca kapatılabilir** (melodi, ped ve notalar); kum ve ortam sesleri kalır. Böylece rahatsız eden şeyin müzik mi kum mu olduğu ayrılabilir.
+
+### Grafik
+
+- Renk ayarı: orta tonlarda hafif kontrast (S eğrisi), biraz doygunluk, hafif sıcaklık. Cam da aynı ayardan geçer.
+- Kum duvarında ışık daha yönlü (sol aydınlık, sağ gölgede), ortam ışığı azaldı: kavanoz daha hacimli.
+- Duvar ve masa bir ton koyu ve sıcak; açık renkli kavanoz öne çıkıyor.
+- Konfeti plastik boncuk gibiydi; artık dönen, takla atan ve havada süzülen kâğıt parçaları.
+- Bitişteki çapraz parlama şeridi inceldi ve hafifledi.
+
+### Puan ve zorluk
+
+Fizik değişmedi. Kontrol: insan 1. bölüm %94, 5. bölüm %86; hiç dokunmayan %52; kusursuz 9. bölüm %91 (sürüm 3-4 ile aynı).
+
+### Bilinen eksikler
+
+- Gerçek telefonda ölçülmedi; hesap tarafı kare başına ~1,7 ms (test tarayıcısında, çizim hariç).
+- Sesi kulakla dinleyemedim; seçenekleri frekans ölçümüyle hazırladım.
+- Akış ve taneler hareket hâlinde değerlendirilmeli; test görüntüleri tek kare.
+
+### Ozer'e sorular (sürüm 5)
+
+1. Raftaki üç kum sesinden hangisi en rahatlatıcı? Müziği kapatınca rahatsızlık geçiyor mu?
+2. Huniden akış ve çarpma artık gerçekçi mi?
+3. Grafikte bir sonraki adım için en çok neyi istersin: arka plan ve ışık, cam, kum dokusu, final gösterisi?
