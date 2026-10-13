@@ -1,4 +1,4 @@
-# Kum Şişesi · TestFlight'a çıkış rehberi
+# Sandful · TestFlight'a çıkış rehberi
 
 Bu klasör oyunun iOS ve Android uygulama paketidir (Capacitor 8, Domino Chase'teki `uygulama/` ile aynı yapı).
 Oyunun tek kaynağı `prototipler/01-kum-sisesi.html`; `npm run build` onu `www/` altına kopyalar ve three.js'i pakete gömer.
@@ -22,8 +22,8 @@ Varsayılanlar:
 
 | Ayar | Değer |
 |---|---|
-| Uygulama adı | Kum Şişesi |
-| Paket kimliği (Bundle ID) | `com.investateknoloji.kumsisesi` |
+| Uygulama adı | Sandful (App Store başlığı: "Sandful: Kum Sanatı") |
+| Paket kimliği (Bundle ID) | `com.investateknoloji.sandful` |
 | Sürüm | 1.0 (derleme numarası Codemagic'te otomatik artar) |
 | Cihaz | Sadece iPhone, dikey, tam ekran |
 | Ekip | İnvesta Teknoloji (`3ANJ967SS2`) |
@@ -35,13 +35,14 @@ Apple Developer hesabı ve Codemagic, Domino Chase'ten hazır. Yeni olan: Bundle
 ### 1. Bundle ID
 
 developer.apple.com > Certificates, Identifiers & Profiles > Identifiers > **+** > App IDs > App.
-Açıklama: Kum Sisesi, Bundle ID: `com.investateknoloji.kumsisesi` (Explicit). Ek yetenek seçmen gerekmez.
+Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek yetenek seçmen gerekmez.
 
 ### 2. App Store Connect'te uygulama kaydı
 
 1. appstoreconnect.apple.com > Uygulamalar > **+** > Yeni Uygulama.
-   Platform iOS, ad **Kum Şişesi**, birincil dil **Türkçe**, Bundle ID yukarıdaki, SKU: `kumsisesi`.
-   - İsim alınmışsa App Store Connect hemen söyler. "Kum Şişesi: Renkli Kum" gibi bir ek dene ve bana yaz.
+   Platform iOS, ad **Sandful: Kum Sanatı**, birincil dil **Türkçe**, Bundle ID yukarıdaki, SKU: `sandful`.
+   - Ad App Store'da görünen başlıktır (en fazla 30 karakter); telefonda ikonun altında sadece **Sandful** yazar.
+   - İsim alınmışsa App Store Connect hemen söyler. "Sandful: Rahatlatan Kum Sanatı" dene ve bana yaz.
 2. Uygulama Bilgileri sayfasındaki **Apple Kimliği**'ni (10 haneli sayı) bana yaz. `codemagic.yaml` içindeki `APP_STORE_APPLE_ID` alanına işleyeceğim.
 
 ### 3. Codemagic
@@ -50,14 +51,14 @@ Açıklama: Kum Sisesi, Bundle ID: `com.investateknoloji.kumsisesi` (Explicit). 
 2. App Store Connect anahtarı Domino Chase için **DominoChase** adıyla eklenmişti; aynı Apple ekibi olduğu için yeniden eklemen gerekmez.
    Farklı bir ad verdiysen bana yaz, `codemagic.yaml`'da değiştireyim.
 3. Team settings > **Code signing identities** > iOS provisioning profiles > **Fetch profiles**:
-   `com.investateknoloji.kumsisesi` için App Store profili gelmezse önce developer.apple.com > Profiles > **+** > App Store Connect >
-   App ID olarak Kum Sisesi'ni ve Domino'daki Apple Distribution sertifikasını seçip profili oluştur, sonra tekrar Fetch.
-4. Codemagic'te uygulamayı aç > **Start new build** > dal: `claude/clever-wright-10sbmw`, iş akışı: **Kum Şişesi · iOS → TestFlight**.
+   `com.investateknoloji.sandful` için App Store profili gelmezse önce developer.apple.com > Profiles > **+** > App Store Connect >
+   App ID olarak Sandful'u ve Domino'daki Apple Distribution sertifikasını seçip profili oluştur, sonra tekrar Fetch.
+4. Codemagic'te uygulamayı aç > **Start new build** > dal: `claude/clever-wright-10sbmw`, iş akışı: **Sandful · iOS → TestFlight**.
    Derleme 10-20 dakika sürer ve bitince otomatik TestFlight'a yüklenir.
 
 ### 4. TestFlight
 
-1. App Store Connect > Kum Şişesi > **TestFlight**. Yeni derleme birkaç dakika "işleniyor" görünür.
+1. App Store Connect > Sandful > **TestFlight**. Yeni derleme birkaç dakika "işleniyor" görünür.
 2. Şifreleme sorusu çıkmaz (uygulama ayarlarında "standart dışı şifreleme yok" işaretli).
 3. **İç test**: ekibindeki App Store Connect kullanıcılarını ekle; inceleme beklemeden dener.
 4. **Dış test**: bir grup oluştur, derlemeyi ekle, `magaza/testflight-metinleri.md`'deki metinleri gir.
@@ -78,7 +79,7 @@ Açıklama: Kum Sisesi, Bundle ID: `com.investateknoloji.kumsisesi` (Explicit). 
    Sol tarafta "Changes" listesinde dosya görünürse (Xcode bazen proje dosyasını değiştirir): sağ tık > **Discard All Changes**, sonra Pull.
 2. Terminal'de:
    ```bash
-   cd ~/Documents/GitHub/Game-Ideas/uygulamalar/kum-sisesi
+   cd ~/Documents/GitHub/Game-Ideas/uygulamalar/sandful
    sh scripts/ios-hazirla.sh
    ```
    Paketleri kurar, oyunu uygulamaya kopyalar ve Xcode'u açar.
@@ -88,13 +89,13 @@ Açıklama: Kum Sisesi, Bundle ID: `com.investateknoloji.kumsisesi` (Explicit). 
 
 ## Android deneyiciler için
 
-Codemagic'te **Kum Şişesi · Android test APK** iş akışını çalıştır. Çıkan `.apk`, Google Play hesabı olmadan
+Codemagic'te **Sandful · Android test APK** iş akışını çalıştır. Çıkan `.apk`, Google Play hesabı olmadan
 "bilinmeyen kaynaklardan yükleme" izniyle Android telefonlara kurulabilir.
 
 ## Geliştirici notları
 
 ```bash
-cd uygulamalar/kum-sisesi
+cd uygulamalar/sandful
 npm ci
 npm run build      # prototipler/01-kum-sisesi.html → www/index.html (three.js gömülü, dış adres yok)
 npx cap sync       # www/ → ios ve android projelerine

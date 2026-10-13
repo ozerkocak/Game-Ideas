@@ -30,6 +30,6 @@ Rahatlatan, akışı olan, kısa düşündüren mobil oyun fikirleri ve prototip
 - WebGL'li ekran görüntüsü için Chromium'u `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist` ile aç. Botlar ve mantık testi için three.js isteğini `route.abort()` ile kes; oyun 3D'siz de çalışır.
 - SwiftShader'da three.js PMREM ortam yansıması (`PMREMGenerator`) bütün PBR malzemeleri siyah yapıyor; bazı telefonlarda da olabilir. Yansıma için 6 tuvalden `CubeTexture` kullan.
 - Sesi dinleyemediğin için spektrumunu ölç (sentez kodunu Node'da çalıştır, merkez frekans ve 500 Hz altı enerji). Gerekirse örnek WAV yaz.
-- Uygulamaya göndermeden önce uçtan uca testi koş: `NODE_PATH=$(npm root -g) node testler/kum-sisesi-e2e.js` (uygulama derlemesi için sona `uygulamalar/kum-sisesi/www/index.html` ekle).
+- Uygulamaya göndermeden önce uçtan uca testi koş: `NODE_PATH=$(npm root -g) node testler/sandful-e2e.js` (uygulama derlemesi için sona `uygulamalar/sandful/www/index.html` ekle).
 - Zorluk ayarı için farklı oyuncu profilleriyle (hiç dokunmayan, kusursuz, insan gibi geç kalan, dağınık) bot simülasyonu çalıştır.
   Bölümler ilk başta kolay olmalı; zorluk ilerleyen bölümlerde açılmalı ve strateji fark yaratmalı.

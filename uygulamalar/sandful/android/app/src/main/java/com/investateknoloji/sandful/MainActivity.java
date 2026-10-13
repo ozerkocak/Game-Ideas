@@ -1,4 +1,4 @@
-package com.investateknoloji.kumsisesi;
+package com.investateknoloji.sandful;
 
 import com.getcapacitor.BridgeActivity;
 

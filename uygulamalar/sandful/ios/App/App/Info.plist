@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>tr</string>
 	<key>CFBundleDisplayName</key>
-	<string>Kum Şişesi</string>
+	<string>Sandful</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

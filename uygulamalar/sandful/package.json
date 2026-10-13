@@ -1,8 +1,8 @@
 {
-  "name": "kum-sisesi",
+  "name": "sandful",
   "version": "1.0.0",
   "private": true,
-  "description": "Kum Şişesi: iOS ve Android uygulama paketi (Capacitor)",
+  "description": "Sandful: iOS ve Android uygulama paketi (Capacitor)",
   "scripts": {
     "build": "node scripts/build-www.mjs",
     "sync": "npm run build && npx cap sync",

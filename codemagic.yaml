@@ -1,8 +1,8 @@
 # Codemagic bulut derleme ayarı (codemagic.io). Mac gerekmeden iOS derler ve TestFlight'a yükler.
-# Kurulum adımları: uygulamalar/kum-sisesi/TESTFLIGHT.md
+# Kurulum adımları: uygulamalar/sandful/TESTFLIGHT.md
 workflows:
-  kum-sisesi-ios:
-    name: Kum Şişesi · iOS → TestFlight
+  sandful-ios:
+    name: Sandful · iOS → TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
@@ -12,12 +12,12 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.investateknoloji.kumsisesi
+        bundle_identifier: com.investateknoloji.sandful
       vars:
         # App Store Connect > Uygulama > Uygulama Bilgileri > Apple Kimliği (rakamlardan oluşur)
         APP_STORE_APPLE_ID: "0000000000"
-        APP_DIR: uygulamalar/kum-sisesi
-        XCODE_PROJECT: uygulamalar/kum-sisesi/ios/App/App.xcodeproj
+        APP_DIR: uygulamalar/sandful
+        XCODE_PROJECT: uygulamalar/sandful/ios/App/App.xcodeproj
         XCODE_SCHEME: App
       node: 22
       xcode: latest
@@ -44,8 +44,8 @@ workflows:
         auth: integration
         submit_to_testflight: true
 
-  kum-sisesi-android:
-    name: Kum Şişesi · Android test APK
+  sandful-android:
+    name: Sandful · Android test APK
     max_build_duration: 30
     instance_type: linux_x2
     environment:
@@ -53,8 +53,8 @@ workflows:
       java: 21
     scripts:
       - name: Paketleri kur ve oyunu kopyala
-        script: cd uygulamalar/kum-sisesi && npm ci && npm run build && npx cap sync android
+        script: cd uygulamalar/sandful && npm ci && npm run build && npx cap sync android
       - name: APK oluştur
-        script: cd uygulamalar/kum-sisesi/android && chmod +x gradlew && ./gradlew assembleDebug
+        script: cd uygulamalar/sandful/android && chmod +x gradlew && ./gradlew assembleDebug
     artifacts:
-      - uygulamalar/kum-sisesi/android/app/build/outputs/apk/debug/*.apk
+      - uygulamalar/sandful/android/app/build/outputs/apk/debug/*.apk

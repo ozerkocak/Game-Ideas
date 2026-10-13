@@ -4,14 +4,14 @@ Birincil dil Türkçe. İngilizce yerelleştirme eklenirse İngilizce metinler d
 
 ## Beta App Description (TR)
 
-Kum Şişesi rahatlatan bir kum sanatı oyunu. Ekrana basılı tutunca huniden renkli kum akar, parmağını kaldırınca durur.
+Sandful rahatlatan bir kum sanatı oyunu. Ekrana basılı tutunca huniden renkli kum akar, parmağını kaldırınca durur.
 Huniyi sağa sola gezdirerek kumu camdaki silik çizgilere göre dök: kumsal, dağlar, çöl, gün batımı, gece...
 Kum gerçek gibi yığılır ve yamaçtan kayar. Bazı bölümlerde tekne, kuğu ya da ay gibi süsleri yerine bırakırsın.
 Şişe dolunca kapak kapanır, eserin rafına dizilir.
 
 ## Beta App Description (EN)
 
-Kum Şişesi ("Sand Jar") is a relaxing sand art game. Hold your finger on the screen to pour colored sand from a funnel; lift it to stop.
+Sandful is a relaxing sand art game. Hold your finger on the screen to pour colored sand from a funnel; lift it to stop.
 Move the funnel and follow the faint lines on the glass to build a landscape layer by layer: beach, mountains, desert, sunset, night.
 The sand piles up and slides like real sand. In some levels you drop a boat, a swan or the moon into place.
 When the jar is full, the lid closes and your jar joins the shelf.

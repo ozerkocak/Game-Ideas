@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sandful</string>
+    <string name="title_activity_main">Sandful</string>
+    <string name="package_name">com.investateknoloji.sandful</string>
+    <string name="custom_url_scheme">com.investateknoloji.sandful</string>
+</resources>

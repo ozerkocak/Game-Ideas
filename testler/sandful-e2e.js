@@ -1,13 +1,13 @@
-// Kum Şişesi uçtan uca son kontrol (TestFlight öncesi).
+// Sandful (Kum Şişesi) uçtan uca son kontrol (TestFlight öncesi).
 // Kurulum: npm install playwright three@0.128.0 (herhangi bir klasörde) ve Chromium (bulut ortamında hazır).
-// Kullanım: node testler/kum-sisesi-e2e.js [html dosyası]   (varsayılan: prototip; uygulama derlemesi için uygulamalar/kum-sisesi/www/index.html)
+// Kullanım: node testler/sandful-e2e.js [html dosyası]   (varsayılan: prototip; uygulama derlemesi için uygulamalar/sandful/www/index.html)
 // Ortam değişkeni THREE ile three.min.js yolu verilebilir; verilmezse uygulama paketinin node_modules'ü denenir.
 // Denetler: ilk açılış, 10 bölüm baştan sona (insan botu), süreler, kayıt ve küçük resimler, bellek (ikinci tur), yeniden açılış (raf),
 // raf/yeniden başlat/süs/final/sonuç/iptal/üfleme/arka plan uç durumları, 3D'siz çalışma, uygulama içi (sahte Capacitor) titreşim, kayıt, duraklatma.
 const {chromium}=require('playwright');const fs=require('fs');const path=require('path');
 const ROOT=path.join(__dirname,'..');
 const FILE=path.resolve(process.argv[2]||path.join(ROOT,'prototipler','01-kum-sisesi.html'));
-const THREE=process.env.THREE||path.join(ROOT,'uygulamalar','kum-sisesi','node_modules','three','build','three.min.js');
+const THREE=process.env.THREE||path.join(ROOT,'uygulamalar','sandful','node_modules','three','build','three.min.js');
 const results=[];const ok=(name,cond,info)=>{results.push({name,ok:!!cond,info});console.log((cond?'✓ ':'✗ ')+name+(info!==undefined?' — '+(typeof info==='string'?info:JSON.stringify(info)):''));};
 async function launch(opts={}){const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--enable-precise-memory-info','--js-flags=--expose-gc']});
  const ctx=await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});

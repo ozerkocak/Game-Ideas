@@ -1,4 +1,4 @@
-# Kum Şişesi · Gizlilik Politikası / Privacy Policy
+# Sandful · Gizlilik Politikası / Privacy Policy
 
 > Taslak. Yayınlamadan önce şirket adresi ve iletişim bilgisi doldurulmalı, gerekirse hukuk danışmanına gösterilmeli.
 > Draft. Fill in the company address and contact details before publishing; have it reviewed if needed.
@@ -9,7 +9,7 @@
 
 **Son güncelleme:** [TARİH]
 
-Kum Şişesi ("Oyun"), Investa Teknoloji Anonim Şirketi ("biz") tarafından geliştirilmektedir.
+Sandful ("Oyun"), Investa Teknoloji Anonim Şirketi ("biz") tarafından geliştirilmektedir.
 
 **Topladığımız veriler.** Oyun hiçbir kişisel veri toplamaz, saklamaz ya da üçüncü taraflarla paylaşmaz. Hesap oluşturmanız gerekmez.
 
@@ -27,7 +27,7 @@ Kum Şişesi ("Oyun"), Investa Teknoloji Anonim Şirketi ("biz") tarafından gel
 
 **Last updated:** [DATE]
 
-Kum Şişesi (the "Game") is developed by Investa Teknoloji Anonim Şirketi ("we").
+Sandful (the "Game") is developed by Investa Teknoloji Anonim Şirketi ("we").
 
 **Data we collect.** The Game does not collect, store or share any personal data. No account is required.
 

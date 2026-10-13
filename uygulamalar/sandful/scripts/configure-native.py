@@ -6,7 +6,7 @@ root=os.path.join(os.path.dirname(__file__),'..','ios','App')
 p=os.path.join(root,'App','Info.plist');d=plistlib.load(open(p,'rb'))
 d['CFBundleDevelopmentRegion']='tr'
 d['CFBundleLocalizations']=['tr']
-d['CFBundleDisplayName']='Kum Şişesi'
+d['CFBundleDisplayName']='Sandful'
 d['UISupportedInterfaceOrientations']=['UIInterfaceOrientationPortrait']
 d.pop('UISupportedInterfaceOrientations~ipad',None)
 d['UIStatusBarHidden']=True

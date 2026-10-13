@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 7 (TestFlight adayı):** son kontroller ve uygulama paketi (`uygulamalar/kum-sisesi/`). Sürüm 2-7 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
+**Uygulama adı: Sandful.** **Güncel sürüm 7 (TestFlight adayı):** son kontroller ve uygulama paketi (`uygulamalar/sandful/`). Sürüm 2-7 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -522,3 +522,14 @@ döküşte, süs tutarken ve finalde raf aç/kapat; süs tutarken yeniden başla
 
 - Gerçek iPhone'da denenmedi; ilk TestFlight derlemesi performans ve ses için ilk gerçek ölçüm olacak.
 - iOS kenar hareketleri (ana ekran çubuğu) oyunda ertelenmiyor; süs düşmüyor ama döküş durur.
+
+## Uygulama adı: Sandful
+
+Ozer TestFlight'tan önce "uygulamaya güzel bir isim bulalım" dedi; seçeneklerden **Sandful**'u seçti.
+
+- Anlamı: sand + mindful (bilinçli, sakin) ve handful (avuç dolusu). Kısa, akılda kalıcı, oyunun "rahatlatan" vaadini taşıyor.
+- App Store başlığı: "Sandful: Kum Sanatı" (alınmışsa "Sandful: Rahatlatan Kum Sanatı"); telefonda ikonun altında "Sandful".
+- Paket kimliği: `com.investateknoloji.sandful`. Uygulama klasörü `uygulamalar/sandful/`. Prototip dosyası `prototipler/01-kum-sisesi.html` olarak kaldı.
+- Araştırma: "Sand Bottles", "Sand Pour", "Sand Sort" gibi düz adlar App Store'da kalabalık; Steam'de benzer konulu "Sandkeeper" (2026 sonu) var.
+  Sandful, Jarscape ve Grain & Glass adıyla uygulama bulunamadı. Diğer adaylar: Jarscape (kavanozda manzara), Grain & Glass.
+- Oyun şimdilik sadece Türkçe; İngilizce arayüz eklenince App Store'a İngilizce yerelleştirme eklenir.
