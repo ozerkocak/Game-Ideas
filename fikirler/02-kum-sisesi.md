@@ -521,6 +521,12 @@ dil (İngilizce ve Almanca telefonda İngilizce, Türkçe harf kalmıyor; Türk�
 | İnsan | 95 ★3 | 84 ★2 | 85 ★2,3 | 91 ★3 | 85 ★2,3 | 81 ★1,7 | 79 ★1,7 | 90 ★3 | 80 ★1,3 | 81 ★1,7 |
 | Kusursuz | 98 ★3 | 97 ★3 | 98 ★3 | 98 ★3 | 96 ★3 | 90 ★3 | 94 ★3 | 94 ★3 | 95 ★3 | 94 ★3 |
 
+### TestFlight yüklemeleri
+
+| Sürüm (derleme) | Tarih | Not |
+|---|---|---|
+| 1.0 (1) | 13 Ekim 2026 | İlk yükleme, Ozer Mac'te Xcode ile (Distribute App) |
+
 ### Bilinen eksikler
 
 - Gerçek iPhone'da denenmedi; ilk TestFlight derlemesi performans ve ses için ilk gerçek ölçüm olacak.
