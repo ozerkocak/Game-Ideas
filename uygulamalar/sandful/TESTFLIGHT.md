@@ -91,6 +91,13 @@ Bütün alanların değerleri: `magaza/app-store-metinleri.md` (ad, alt başlık
 5. **Business:** AB'de yayın için "trader" (DSA) bilgisi girilmiş olmalı (hesap düzeyinde, bir kez).
 6. **Add for Review** → **Submit**. İnceleme genelde 1-2 gün; onaylanınca "Manually release" seçildiyse yayın düğmesine sen basarsın.
 
+1.0, 13 Ekim 2026'da incelemeye gönderildi. App Store Connect'te karşılaşılanlar (sonraki oyunlar için):
+- Dil menüsünden başka dile geçmeden önce **Save**; kaydedilmeyen metinler siliniyor.
+- Birden çok ekran görüntüsü birlikte bırakılınca sıra ters dizilebiliyor; küçük resimler sürüklenerek düzeltilir.
+- Ekran görüntüsü kutusu "iPhone with Dynamic Island (medium display)": 1206×2622 ya da 1179×2556 istiyor.
+- Sürüm sayfasında **Sign-in required** ve **Game Center** işaretli gelebiliyor; ikisi de kaldırılır.
+- App Privacy cevapları **Publish** edilmeden inceleme başlamıyor. AB için DSA "trader" beyanı Business sayfasında, bir kez.
+
 ## Android deneyiciler için
 
 Codemagic'te **Sandful · Android test APK** iş akışını çalıştır. Çıkan `.apk`, Google Play hesabı olmadan
