@@ -262,10 +262,11 @@ function avStep(){avMoved=0;
   a.t+=DT;avMoved+=moved;
   if(!BOT&&moved>2e-5){const n=segN[a.lo];spawnTrickle(a.lo,a.hi,n?Math.min(segC[a.lo*MAXS+n-1]%100,ncol-1):0);}
   if((a.t>.08&&moved<4e-5)||a.t>.5)avs.splice(i,1);}}
+const CEIL=HJ-.012; // kum cam ağzını aşmaz: tavana ulaşan sütun dolu sayılır, pay yana yuvarlanır
 function pourAt(c,a,col){let g=0,c0=c;const T=TSTOP*(.9+rnd()*.2);
  while(a>1e-9&&g++<NC*2){const hl=valid[c-1]?topY[c-1]:1e9,hr=valid[c+1]?topY[c+1]:1e9,h=topY[c],low=Math.min(hl,hr);
-  if(h-low>T){c=hl<hr?c-1:c+1;continue;}
-  const put=Math.min(a,Math.max(low+T-h,0));if(put>0){addTop(c,col,put);a-=put;}
+  if(h-low>T||h>=CEIL){if(low>=CEIL)break;c=hl<hr?c-1:c+1;continue;}
+  const put=Math.min(a,Math.max(low+T-h,0),CEIL-h);if(put>0){addTop(c,col,put);a-=put;}
   if(a>1e-9)c=hl<hr?c-1:c+1;}
  return c-c0;}
 function deposit(x,col,area){const c0=colOf(x);let ws=0;const w=[];
@@ -286,7 +287,8 @@ function updateSlices(){let w=0;
  slices.length=w;}
 
 // ───────── Oyun akışı ─────────
-function startLevel(n,opt={}){
+let starTimers=[];function clearStars(){starTimers.forEach(clearTimeout);starTimers=[];}
+function startLevel(n,opt={}){clearStars();down=false;activeId=null;
  LV=n;L=LEVELS[n];BOT=!!opt.bot;seed=(opt.seed!=null?opt.seed:(Date.now()&0xffffff))||1;
  buildLevel();
  slices=[];avs=[];avMoved=0;noz=nozT=0;state='ready';T=0;pourStart=1e9;pouring=false;flowNow=0;emitting=false;wasEmit=false;landed=0;slideFlux=0;onTarget=false;streakT=0;offT=9;streakLvl=0;
@@ -338,6 +340,7 @@ function step(){
  if(landed>0&&T>=nextTick){nextTick=T+.055+.07*(1-Math.min(1,lr))+Math.random()*.04;if(PLG.Haptics||navigator.vibrate)vib(onTarget?7:5,true);else tickDue=true;}
  setPour(lr*(1-gf)*(.55+.45*sp),lr*gf,Math.min(1,slideFlux/6+avMoved*30),clamp(landX/RW,-1,1)*.45);
  if(AC)padTick();
+ if(hapSel&&!down&&landed===0&&!avs.length&&performance.now()-hapLast>600)hapEnd();
  if(L.ortam==='gece'&&T>=nextCricket){nextCricket=T+.9+Math.random()*.9;cricket();}}
 function emit(){
  const it=queue[qi];if(!it){if(!slices.length){state='settle';settleT=0;}return;}
@@ -362,7 +365,7 @@ function score(){let tot=0;layerScore=new Array(ncol).fill(0);const acc=new Floa
    y+=h;}
   let cum=floorY[c];for(let k=0;k<ncol;k++){cum+=acc[k];const e=Math.max(0,Math.abs(cum-tTop[k][c])-TOL),sc=Math.max(0,1-e/SCALE);layerScore[k]+=sc;tot+=sc;}}
  const n=scoreCols.length;for(let k=0;k<ncol;k++)layerScore[k]/=n;return n?tot/(n*ncol)*100:0;}
-function starsFor(p){let s=p>=STAR_TH[2]?3:p>=STAR_TH[1]?2:p>=STAR_TH[0]?1:0;if(s===3&&decorList.some(d=>!d.ok))s=2;return s;}
+function starsFor(p){p=Math.round(p);let s=p>=STAR_TH[2]?3:p>=STAR_TH[1]?2:p>=STAR_TH[0]?1:0;if(s===3&&decorList.some(d=>!d.ok))s=2;return s;}
 
 // ───────── Süsler ─────────
 // Süs huninin altında asılı gelir; sürükleyerek yerine getirip parmağını kaldırınca düşer.
@@ -408,7 +411,7 @@ function showResult(){
  $('rTitle').textContent=['Şişe hazır','Güzel bir şişe','Çok güzel!','Kusursuz şişe!'][s];
  $('rPct').innerHTML='%'+p+' <small>benzerlik</small>';
  const stars=[...$('rStars').children];stars.forEach(e=>e.classList.remove('on'));
- stars.forEach((e,k)=>{if(k<s)setTimeout(()=>{e.classList.add('on');starPop(k);vib(25);},380+k*360);});
+ stars.forEach((e,k)=>{if(k<s)starTimers.push(setTimeout(()=>{e.classList.add('on');starPop(k);vib(25);},380+k*360));});
  let msg=s===0?'Bir yıldız için %'+STAR_TH[0]+' gerekli. Kumu silik çizgilere yakın dök.':
   s<2?'İki yıldız için %'+STAR_TH[1]+'. Parlayan bölgeye dök, ses kesilirse yer değiştir.':
   s<3?(p>=STAR_TH[2]&&decorList.some(d=>!d.ok)?'Üçüncü yıldız için süsler halkanın içine düşmeli.':'Üçüncü yıldız için %'+STAR_TH[2]+'.'):'Rafına eklendi.';
@@ -441,21 +444,23 @@ function gj(){return Math.sqrt(-2*Math.log(Math.random()+1e-9))*Math.cos(6.2832*
 // Taneler yumuşak zarflı kısa sinüslerdir (sin: Hann zarfı, ring: cam gibi yumuşak başlayıp sönen), altında 4. dereceden süzülmüş hışırtı (bw, bhp-blp),
 // hızlı ve yavaş genlik dalgalanması (mod, mod2). 4 kHz üstü yok denecek kadar az. Sayfa açılınca karelere bölünerek hesaplanır.
 const SR0=48000;let sndJob=null,sndQ=[],sndCache={},sndPreview=false;
-function biq(d,type,f,Q){const w=6.2832*f/SR0,c=Math.cos(w),al=Math.sin(w)/(2*Q),a0=1+al;let b0,b1,b2;
+// süzgeç ve genlik dalgalanması da üretici: her ~24 bin örnekte bir duraklar (karede birkaç ms, telefonda takılma olmaz)
+function* biq(d,type,f,Q){const w=6.2832*f/SR0,c=Math.cos(w),al=Math.sin(w)/(2*Q),a0=1+al;let b0,b1,b2;
  if(type==='lp'){b0=(1-c)/2;b1=1-c;b2=b0;}else{b0=(1+c)/2;b1=-(1+c);b2=b0;}
  b0/=a0;b1/=a0;b2/=a0;const a1=-2*c/a0,a2=(1-al)/a0;let x1=0,x2=0,y1=0,y2=0;const n=d.length;
- for(let pass=0;pass<2;pass++)for(let i=0;i<n;i++){const x=d[i],y=b0*x+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=x;y2=y1;y1=y;if(pass)d[i]=y;}}
+ for(let pass=0;pass<2;pass++)for(let i=0;i<n;i++){const x=d[i],y=b0*x+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=x;y2=y1;y1=y;if(pass)d[i]=y;if(i%24000===23999)yield;}}
 function rmsN(d,v){let s=0;for(let i=0;i<d.length;i++)s+=d[i]*d[i];const g=v/Math.sqrt(s/d.length+1e-12);for(let i=0;i<d.length;i++)d[i]*=g;}
-function amod(d,depth,hz,sec){const n=d.length,m=Math.max(2,Math.round(sec*hz)),v=Array.from({length:m},()=>Math.random());
- for(let i=0;i<n;i++){const f=i/n*m,j=Math.floor(f),t=f-j,q=t*t*(3-2*t),a=v[j%m],b=v[(j+1)%m];d[i]*=1+depth*((a+(b-a)*q)*2-1);}}
+function* amod(d,depth,hz,sec){const n=d.length,m=Math.max(2,Math.round(sec*hz)),v=Array.from({length:m},()=>Math.random());
+ for(let i=0;i<n;i++){const f=i/n*m,j=Math.floor(f),t=f-j,q=t*t*(3-2*t),a=v[j%m],b=v[(j+1)%m];d[i]*=1+depth*((a+(b-a)*q)*2-1);if(i%24000===23999)yield;}}
 function* grainGen(o){const sr=SR0,n=Math.floor(sr*o.sec),d=new Float32Array(n);
- if(o.kind){const N=Math.floor(o.rate*o.sec),att=.0012*sr;
-  for(let k=0;k<N;k++){if((k&127)===127)yield;const t0=Math.floor(Math.random()*n),f=o.f0*Math.pow(o.f1/o.f0,Math.random()),L=Math.floor((o.u0+(o.u1-o.u0)*Math.random())*sr),w=6.2832*f/sr,amp=Math.exp(gj()*o.sig),c=Math.cos(w),sn=Math.sin(w),tau=L/5;
-   let re=1,im=0;for(let i=0;i<L;i++){const env=o.kind==='ring'?Math.min(1,i/att)*Math.exp(-i/tau):.5-.5*Math.cos(6.2832*i/L);d[(t0+i)%n]+=im*env*amp;const r2=re*c-im*sn;im=re*sn+im*c;re=r2;}}
+ if(o.kind){const N=Math.floor(o.rate*o.sec),att=.0012*sr;let work=0;
+  for(let k=0;k<N;k++){const t0=Math.floor(Math.random()*n),f=o.f0*Math.pow(o.f1/o.f0,Math.random()),L=Math.floor((o.u0+(o.u1-o.u0)*Math.random())*sr),w=6.2832*f/sr,amp=Math.exp(gj()*o.sig),c=Math.cos(w),sn=Math.sin(w),tau=L/5;
+   let re=1,im=0;for(let i=0;i<L;i++){const env=o.kind==='ring'?Math.min(1,i/att)*Math.exp(-i/tau):.5-.5*Math.cos(6.2832*i/L);d[(t0+i)%n]+=im*env*amp;const r2=re*c-im*sn;im=re*sn+im*c;re=r2;}
+   work+=L;if(work>20000){work=0;yield;}}
   yield;rmsN(d,o.gw);}
- if(o.bw){const b=new Float32Array(n);for(let i=0;i<n;i++)b[i]=Math.random()*2-1;yield;biq(b,'hp',o.bhp,.7);biq(b,'lp',o.blp,.7);yield;biq(b,'hp',o.bhp,.7);biq(b,'lp',o.blp,.7);yield;rmsN(b,o.bw);for(let i=0;i<n;i++)d[i]+=b[i];}
- if(o.mod)amod(d,o.mod,o.modHz,o.sec);if(o.mod2)amod(d,o.mod2,o.mod2Hz,o.sec);
- yield;biq(d,'hp',o.hp,.7);biq(d,'lp',o.lp,.7);rmsN(d,.2);
+ if(o.bw){const b=new Float32Array(n);for(let i=0;i<n;i++){b[i]=Math.random()*2-1;if(i%24000===23999)yield;}yield*biq(b,'hp',o.bhp,.7);yield*biq(b,'lp',o.blp,.7);yield*biq(b,'hp',o.bhp,.7);yield*biq(b,'lp',o.blp,.7);rmsN(b,o.bw);yield;for(let i=0;i<n;i++)d[i]+=b[i];}
+ if(o.mod)yield*amod(d,o.mod,o.modHz,o.sec);if(o.mod2)yield*amod(d,o.mod2,o.mod2Hz,o.sec);
+ yield*biq(d,'hp',o.hp,.7);yield*biq(d,'lp',o.lp,.7);rmsN(d,.2);
  return d;}
 // Kum sesleri (rafta seçilir): tıpırtı (varsayılan: yumuşak sinüs taneleri + hışırtı, yağmur çubuğu gibi), kadife (sadece yumuşak hışırtı), ince (çok ince, sık taneler).
 // cam: boş cam tabana düşüş (yumuşak çınlayan seyrek taneler), kay: yamaçtan kayma (pes, dalgalanan hışırtı).
@@ -467,9 +472,9 @@ const SND={
  kay:{sec:3.7,bw:1,bhp:300,blp:1400,mod:.45,modHz:4,mod2:.2,mod2Hz:1.1,hp:200,lp:3000}};
 const KUM_SES=['tipirti','kadife','ince'],KUM_AD=['Tıpırtı','Kadife','İnce'];
 const kumAdi=()=>KUM_SES[SAVE.kum6|0]||'tipirti';
-function sndNeed(names){names.forEach(nm=>{if(!sndCache[nm]&&!sndQ.includes(nm))sndQ.push(nm);});if(!sndJob)sndNext();}
+function sndNeed(names){names.forEach(nm=>{if(!sndCache[nm]&&!sndQ.includes(nm)&&!(sndJob&&sndJob.nm===nm))sndQ.push(nm);});if(!sndJob)sndNext();}
 function sndNext(){const nm=sndQ.shift();if(!nm){sndJob=null;return;}const g=grainGen(SND[nm]);
- sndJob={run(ms){const t=performance.now();while(performance.now()-t<ms){const r=g.next();if(r.done){sndCache[nm]=r.value;sndNext();attachPour();return;}}}};}
+ sndJob={nm,run(ms){const t=performance.now();while(performance.now()-t<ms){const r=g.next();if(r.done){sndCache[nm]=r.value;sndNext();attachPour();return;}}}};}
 function sndStart(){sndNeed([kumAdi(),'cam','kay']);}
 // her katman iki çalardan: aynı tampon farklı yerden ve biraz farklı hızda; döngünün tekrarı duyulmaz
 function mkLayer(d){const buf=AC.createBuffer(1,d.length,SR0);buf.getChannelData(0).set(d);const g=AC.createGain();g.gain.value=0;g.connect(pourPan||sandBus);const dur=buf.duration,ss=[];
@@ -544,13 +549,14 @@ let lastIos=0;
 function iosTap(){if(!IS_IOS)return;const now=performance.now();if(now-lastIos<70)return;lastIos=now;
  try{const l=document.createElement('label');l.ariaHidden='true';l.style.display='none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');l.appendChild(i);document.head.appendChild(l);l.click();document.head.removeChild(l);}catch(e){}}
 function vib(p,tick){if(BOT||SAVE.hap===false)return;
- if(PLG.Haptics){const Hp=PLG.Haptics;if(tick){Hp.selectionChanged().catch(()=>{});return;}
+ if(PLG.Haptics){const Hp=PLG.Haptics;if(tick){hapBegin();Hp.selectionChanged().catch(()=>{});hapLast=performance.now();return;}
   const imp=ms=>Hp.impact({style:ms>=50?'HEAVY':ms>=14?'MEDIUM':'LIGHT'}).catch(()=>{});
   if(Array.isArray(p)){let t=0;p.forEach((ms,i)=>{if(i%2===0)setTimeout(()=>imp(ms),t);t+=ms;});}else imp(p);return;}
  if(navigator.vibrate){try{navigator.vibrate(p);}catch(e){}return;}
  if(!tick)iosTap();}
-function hapBegin(){if(PLG.Haptics&&SAVE.hap!==false&&!BOT)PLG.Haptics.selectionStart().catch(()=>{});}
-function hapEnd(){if(PLG.Haptics)PLG.Haptics.selectionEnd().catch(()=>{});}
+let hapSel=false,hapLast=0;
+function hapBegin(){if(PLG.Haptics&&SAVE.hap!==false&&!BOT&&!hapSel){hapSel=true;PLG.Haptics.selectionStart().catch(()=>{});}}
+function hapEnd(){if(PLG.Haptics&&hapSel){hapSel=false;PLG.Haptics.selectionEnd().catch(()=>{});}}
 </script>
 <script>
 // ───────── 3D sahne (three.js r128) ─────────
@@ -749,8 +755,8 @@ function drawDecor(id,x,w,h){x.lineJoin='round';x.lineCap='round';const G=(x0,y0
 function initGfx(){
  if(!window.THREE){gfxFail();return;}
  try{
-  const T3=THREE,r=new T3.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});
-  r.setPixelRatio(Math.min(2.5,window.devicePixelRatio||1));r.outputEncoding=T3.sRGBEncoding;r.toneMapping=T3.NoToneMapping;
+  const T3=THREE,r=new T3.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
+  r.setPixelRatio(Math.min(2,window.devicePixelRatio||1)); // kenar yumuşatma çoklu örneklemeli ara dokuda; bellek için piksel oranı en fazla 2r.outputEncoding=T3.sRGBEncoding;r.toneMapping=T3.NoToneMapping;
   const scene=new T3.Scene();scene.background=new T3.Color(0xcdb592);scene.fog=new T3.Fog(0xc8ae8c,8,17);
   const cam=new T3.PerspectiveCamera(24,1,.1,80);
   // yansımalar için küp harita
@@ -911,6 +917,7 @@ function updateSurf(){const hf=RD.hf,S=hf.S,RT=RD.rTab,W=RD.wall;
  for(let c=0;c<NC;c++){let s2=0,n2=0;for(let k=-18;k<=18;k++){const q=c+k;if(q>=0&&q<NC&&valid[q]&&segN[q]){s2+=S[q];n2++;}}
   const dv=n2?S[c]-s2/n2:0;hf.A[c]=dv;hf.B[c]=segN[c]?Math.max(0,dv)*1.15:0;
   const X=xOf(c),rr=rAt(S[c])-.003;hf.Z[c]=valid[c]&&segN[c]?Math.sqrt(Math.max(0,rr*rr-X*X)):0;}
+ let mt=0;for(let c=0;c<NC;c++)if(valid[c]&&topY[c]>mt)mt=topY[c];hf.maxTop=mt;
  const Hh=(c,q)=>{c=clamp(c,0,NC-1);return S[c]+hf.B[c]*(1-q*q);};
  for(let c=0;c<NC;c++){const X=xOf(c),zm=hf.Z[c],e=valid[c]&&segN[c]?1:0,cv=clamp(hf.A[c]/.06,-1,1)*.13,tk=clamp((topY[c]-floorY[c])/.014,0,1);
   for(let j=0;j<=hf.K;j++){const v=c*(hf.K+1)+j,o=v*3,q=-1+2*j/hf.K,H=Hh(c,q),dx=(Hh(c+3,q)-Hh(c-3,q))/(6*DX),dz=zm>1e-4?-2*hf.B[c]*q/zm:0,il=1/Math.hypot(dx,1,dz);
@@ -1005,7 +1012,7 @@ function gfxFrame(now){if(!RD)return;const t=now/1000,fdt=clamp((now-lastGfx)/10
  if(cur!==RD.curK){RD.curK=cur;if(cur>=0){const cd=RD.curData;for(let c=0;c<NC;c++){const h=Math.round(clamp(tTop[cur][c]/YT,0,1)*65535);cd[c*4]=h>>8;cd[c*4+1]=h&255;}RD.curTex.needsUpdate=true;}}
  for(let k=0;k<3;k++){const r=decorList[k];if(!r||r.placed){RD.zones[k].w=0;continue;}RD.zones[k].set(r.zx,r.zy,Math.max(r.D.w,r.D.h)*.62,decor&&decor.rec===r?2:1);}
  RD.wallMat.uniforms.uTime.value=t;RD.wallMat.uniforms.uWave.value=waveY;RD.hfMat.uniforms.uTime.value=t;RD.frontMat.uniforms.uSweep.value=sweep;
- if(lidY!==null){RD.lid.visible=true;RD.lid.position.y=HJ+.05+lidY*1.1;}else RD.lid.visible=false;
+ if(lidY!==null){RD.lid.visible=true;RD.lid.position.y=Math.max(HJ+.05,(RD.hf.maxTop||0)+.06)+lidY*1.1;}else RD.lid.visible=false;
  const CF=RD.conf;CF.a=CF.a.filter(p=>(p.t+=fdt)<3.4);n=0;for(const p of CF.a){p.vy-=.1*fdt;if(p.vy<-.009)p.vy=-.009;p.vx*=Math.pow(.5,fdt);p.x+=p.vx*60*fdt+Math.sin(p.f*.5)*.004;p.y+=p.vy*60*fdt;p.z+=p.vz*60*fdt;p.r+=p.vr*fdt;p.f+=p.vf*fdt;const o=n*3;CF.pos[o]=p.x;CF.pos[o+1]=p.y;CF.pos[o+2]=p.z;CF.col[o]=p.c[0];CF.col[o+1]=p.c[1];CF.col[o+2]=p.c[2];CF.size[n]=p.s;CF.rot[n*2]=p.r;CF.rot[n*2+1]=p.f;n++;}
  CF.geo.setDrawRange(0,n);const ca=CF.geo.attributes;ca.position.needsUpdate=ca.aCol.needsUpdate=ca.aSize.needsUpdate=ca.aRot.needsUpdate=true;
  RD.Lv.copy(RD.Ldir).transformDirection(RD.cam.matrixWorldInverse);
@@ -1028,7 +1035,7 @@ function updateHud(){const p=Math.round(pct);
   if(it.t==='kum'){const f=k<qi?1:k>qi?0:1-it.a/it.a0,fe=it.el.firstChild,w=(f*100).toFixed(1)+'%';if(fe.style.width!==w)fe.style.width=w;}
   else it.el.classList.toggle('done',k<qi);});}
 function updatePuffBtn(){$('bPuff').querySelector('b').textContent=puffs;$('bPuff').classList.toggle('off',puffs<=0);}
-function openRaf(){if(state!=='menu'){prevState=state;state='menu';}pouring=false;setPour(0,0,0,null,null);$('result').classList.remove('show');
+function openRaf(){clearStars();if(state!=='menu'){prevState=state;state='menu';}pouring=false;setPour(0,0,0,null,null);$('result').classList.remove('show');
  const sh=$('shelves');sh.innerHTML='';let total=0,nextIdx=-1;
  for(let r=0;r<LEVELS.length;r+=3){const row=document.createElement('div');row.className='shelf';
   for(let k=r;k<Math.min(r+3,LEVELS.length);k++){const rec=SAVE.lv[k],open=k===0||(SAVE.lv[k-1]&&SAVE.lv[k-1].s>=1),s=rec?rec.s:0;total+=s;
@@ -1044,12 +1051,14 @@ function closeRaf(skip){$('raf').classList.remove('show');if(!skip&&prevState){s
 
 // ───────── Girdi ─────────
 // Basılı tut: kum akar. Sürükle: huni gezer. Bırak: akış durur (süs varsa düşer).
-let down=false,lastX=0;
-cv.addEventListener('pointerdown',e=>{if(state==='menu'||state==='result'||state==='finale')return;down=true;lastX=e.clientX;
+let down=false,lastX=0,activeId=null;
+cv.addEventListener('pointerdown',e=>{if(state==='menu'||state==='result'||state==='finale')return;if(down&&e.pointerId!==activeId)return;activeId=e.pointerId;down=true;lastX=e.clientX;
  try{cv.setPointerCapture(e.pointerId);}catch(_){}initAudio();if(state==='ready')beginPour();pouring=true;hapBegin();});
-cv.addEventListener('pointermove',e=>{if(!down)return;nozT+=(e.clientX-lastX)/cellPx*CELL*GAIN;lastX=e.clientX;if(tickDue){tickDue=false;iosTap();}});
-const up=()=>{if(!down)return;down=false;pouring=false;hapEnd();if(state==='hold'&&holdT>.3)releaseDecor();};
-cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+cv.addEventListener('pointermove',e=>{if(!down||e.pointerId!==activeId)return;nozT+=(e.clientX-lastX)/cellPx*CELL*GAIN;lastX=e.clientX;if(tickDue){tickDue=false;iosTap();}});
+const up=e=>{if(!down||e.pointerId!==activeId)return;down=false;activeId=null;pouring=false;if(state==='hold'&&holdT>.3)releaseDecor();};
+// sistem hareketi (ana ekran çubuğu, bildirim merkezi) dokunmayı iptal ederse süs düşmez, sadece akış durur
+const cancel=e=>{if(!down||e.pointerId!==activeId)return;down=false;activeId=null;pouring=false;};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',cancel);
 ['pointerup','touchend','click','keydown'].forEach(ev=>addEventListener(ev,()=>initAudio(),{passive:true}));
 $('bRaf').onclick=()=>openRaf();
 $('bRe').onclick=()=>startLevel(LV);
@@ -1061,12 +1070,12 @@ $('sSnd').onclick=()=>{SAVE.snd=SAVE.snd===false;persist();if(master)master.gain
 $('sMuz').onclick=()=>{SAVE.muz=SAVE.muz===false;persist();if(musicBus)musicBus.gain.value=SAVE.muz?1:0;$('sMuz').textContent='Müzik: '+(SAVE.muz?'açık':'kapalı');};
 $('sKum').onclick=()=>{initAudio();SAVE.kum6=((SAVE.kum6|0)+1)%3;persist();$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kum6];sndNeed([kumAdi()]);attachPour();previewKum();};
 $('sHap').onclick=()=>{SAVE.hap=SAVE.hap===false;persist();$('sHap').textContent='Titreşim: '+(SAVE.hap?'açık':'kapalı');if(SAVE.hap)vib(20);};
-function setBg(bg){if(bg){pouring=false;down=false;hapEnd();if(AC)AC.suspend().catch(()=>{});}else if(AC)AC.resume().catch(()=>{});}
+function setBg(bg){if(bg){pouring=false;down=false;activeId=null;hapEnd();if(AC)AC.suspend().catch(()=>{});}else if(AC)AC.resume().catch(()=>{});}
 document.addEventListener('visibilitychange',()=>setBg(document.hidden));if(PLG.App)PLG.App.addListener('appStateChange',st=>setBg(!st.isActive));
 
 // ───────── Döngü ─────────
 let TS=1,last=performance.now(),acc=0,AUTO=null,FREEZE=false;
-function frame(now){requestAnimationFrame(frame);if(sndJob)sndJob.run(8);const dt=Math.min(.1,(now-last)/1000);last=now;
+function frame(now){requestAnimationFrame(frame);if(sndJob)sndJob.run(state==='pour'||state==='hold'?4:10);const dt=Math.min(.1,(now-last)/1000);last=now;
  if(TS>0&&!document.hidden&&L){acc+=dt*TS;let n=0;while(acc>=DT&&n<4){step();acc-=DT;n++;}if(n===4)acc=0;}
  if(L&&state!=='menu'&&!FREEZE){gfxFrame(now);updateHud();}}
 
@@ -1108,9 +1117,12 @@ window.__game={setTS:v=>{TS=v;},sim:ms=>{const n=Math.round(ms/1000/DT);for(let 
  start:n=>startLevel(n),freeze:v=>{FREEZE=!!v;},run:n=>{let v=lastGfx;for(let k=0;k<n;k++){step();v+=1000/60;gfxFrame(v);}},begin:()=>beginPour(),pour:v=>{pouring=!!v;},input:x=>{nozT=x;},release:()=>releaseDecor(),puff:()=>puff(),bot:runBot,levels:LEVELS.length};
 
 // İlk açılış: menü yok, doğrudan 1. bölüm. Sonraki açılışlar raf.
-initGfx();resize();sndStart();
-function boot(){if(!SAVE.seen)startLevel(0);else{startLevel(Math.min(LEVELS.length-1,Object.keys(SAVE.lv).length));openRaf();prevState=null;$('rafClose').style.display='none';}}
-if(PLG.Preferences)PLG.Preferences.get({key:SKEY}).then(r=>{if(r&&r.value){try{const v=JSON.parse(r.value);if(v&&typeof v==='object')SAVE=Object.assign(SAVE,v);}catch(e){}}}).catch(()=>{}).then(boot);
+initGfx();resize();
+function boot(){sndStart();if(!SAVE.seen)startLevel(0);else{startLevel(Math.min(LEVELS.length-1,Object.keys(SAVE.lv).length));openRaf();prevState=null;$('rafClose').style.display='none';}}
+// iki kopyadan (tarayıcı deposu, uygulama tercihleri) her bölüm için en iyi sonucu al; biri kaybolsa da ilerleme gitmez
+function mergeSave(v){if(!v||typeof v!=='object')return;const lv=Object.assign({},SAVE.lv);for(const k in v.lv||{}){const a=lv[k],b=v.lv[k];if(!b)continue;if(!a){lv[k]=b;continue;}
+ lv[k]={p:Math.max(a.p||0,b.p||0),s:Math.max(a.s||0,b.s||0),img:(b.p||0)>(a.p||0)?(b.img||a.img):(a.img||b.img)};}SAVE=Object.assign(SAVE,v,{lv,seen:!!(SAVE.seen||v.seen)});}
+if(PLG.Preferences)PLG.Preferences.get({key:SKEY}).then(r=>{if(r&&r.value){try{mergeSave(JSON.parse(r.value));}catch(e){}}}).catch(()=>{}).then(boot);
 else boot();
 requestAnimationFrame(frame);
 </script>

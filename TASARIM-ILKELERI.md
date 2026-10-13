@@ -58,6 +58,7 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | "Cızırtı" = binlerce tık. Gürültüyle tetiklenen kısa tanelerle yapılan ses frekansı ne olursa olsun cızırdar. Sürekli sesleri tıksız yap: yumuşak zarflı sinüs taneleri, dar bantlı süzülmüş hışırtı, 4 kHz üstünü kes. Döngü dikişinde çıt olmasın | Kum Şişesi sürüm 5 → 6 |
 | Gerçekçilik için davranış da gerekir, sadece görüntü değil: kum yamacı dikleşip küçük kaymalarla yatmalı (tutun-kay) | Kum Şişesi sürüm 6 |
 | Oyuncunun yerleştirdiği nesneler (süs) hacim kaplıyorsa malzeme miktarından düş; yoksa sonuç hedefin üstüne taşar ve kusursuz oyun bile cezalanır | Kum Şişesi sürüm 6 |
+| Uygulamaya çıkmadan önce: ikinci parmak ve dokunma iptali (sistem hareketleri) ayrı ele alınır, ekranda yazan sayı ile ödülü belirleyen sayı aynı yuvarlanır, kayıt iki kopya tutulur ve birleştirilirken en iyisi alınır, ağır hesap küçük parçalara bölünür, bölüm değişince grafik kaynakları temizlenir | Kum Şişesi sürüm 7 (bağımsız kod incelemesi) |
 
 ## Reddedilmiş yönler
 

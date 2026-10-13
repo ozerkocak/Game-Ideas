@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 6:** tıksız kum sesi, tutun-kay kum fiziği (küçük kaymalar), süs alanı düzeltmesi. Sürüm 2-6 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
+**Güncel sürüm 7 (TestFlight adayı):** son kontroller ve uygulama paketi (`uygulamalar/kum-sisesi/`). Sürüm 2-7 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -472,3 +472,53 @@ Ama oyunu değiştirir:
 - Ortaya dökülen kum ön cama 0,6 birim (kavanoz boyunun %28'i) daha alçak ulaşır. Gerçek kum sanatçıları bu yüzden camın dibine döker; huni ön cam boyunca, camın kıvrımını izleyerek gezmeli.
 - Kum arkaya da yayıldığı için katmanlar daha yavaş yükselir; dökülecek miktar, bölümler ve botlar baştan ayarlanmalı.
 - Hesap yükü artar (128 × 64 sütun), telefonda ölçmek gerekir.
+
+## Sürüm 7: son kontroller ve TestFlight hazırlığı
+
+İstek: "Son kontrolleri yapar mısın, hem mantık hem kod hem ses, bütün her şeyi; TestFlight'a alayım."
+
+### Uygulama paketi
+
+`uygulamalar/kum-sisesi/` (Capacitor 8, Domino Chase ile aynı yapı). Kurulum ve TestFlight adımları: `uygulamalar/kum-sisesi/TESTFLIGHT.md`.
+- Paket kimliği `com.investateknoloji.kumsisesi`, ad "Kum Şişesi", sadece iPhone, dikey, Türkçe.
+- three.js pakete gömülü, dış bağlantı yok (derleme dış adres kalırsa durur).
+- Ses oturumu "ambient": kullanıcının müziği kesilmez; telefon sessizdeyse oyun sesi çıkmaz.
+- Kayıt hem tarayıcı deposuna hem uygulama tercihlerine (Preferences) yazılır; açılışta ikisinden her bölüm için en iyisi alınır.
+- Arka plana geçince (App eklentisi) döküş durur, ses askıya alınır.
+- Bulut derleme: kökteki `codemagic.yaml` (iOS → TestFlight, Android test APK).
+
+### Bağımsız kod incelemesinde bulunan ve düzeltilenler
+
+| Bulgu | Etkisi | Düzeltme |
+|---|---|---|
+| Çoklu dokunma | İkinci parmak huniyi zıplatıyor, parmaklardan biri kalkınca döküş duruyor | Sadece ilk parmak izlenir |
+| Ekrandaki yüzde yuvarlanıyor, yıldız ham değerden | "%72" yazarken 0 yıldız, sonraki bölüm kilitli | Yıldızlar ekrandaki yuvarlanmış yüzdeden |
+| Ses üretim parçaları uzun | Açılışta 50-125 ms takılmalar | Parçalar en fazla ~5-7 ms; dökerken karede 4 ms, beklerken 10 ms |
+| Sistem hareketi dokunmayı iptal edince | Tutulan süs yanlış yere düşüyor | İptal sadece akışı durdurur, süs düşmez |
+| Kayıt birleştirme ve kum sesi açılış sırası | Eski kopya yeni ilerlemeyi ezebilir; seçili kum sesi çalmayabilir | Her bölüm için en iyi sonuç; kum sesi kayıt okunduktan sonra üretilir |
+| Hızlı "Tekrar" | Yıldız sesleri yeni bölümde çalıyor | Zamanlayıcılar iptal edilir |
+| Kum cam ağzını aşabiliyordu | Kapak kumun içine giriyor | Tavan: kum ağızdan 1 hücre aşağıda durur; kapak en yüksek noktanın üstüne oturur |
+| Bırakınca düşmeye devam eden kumun titreşimi kayboluyordu | Kuyruk tıkları hissedilmiyor | Seçim titreşimi gerektiğinde başlar, 0,6 sn boşta kalınca biter |
+| Üretilen ses tekrar sıraya girebiliyordu | Gereksiz işlem | Sıra kontrolü |
+| Bölüm başına bellek sızıntısı (kapak geometrileri, süs malzemeleri) | Uzun oturumda bellek artışı | Bölüm değişince temizlenir |
+| Ekran belleği (iki çoklu örneklemeli tampon, piksel oranı 2,5) | Eski iPhone'larda bellek riski | Kenar yumuşatma sadece ara dokuda, piksel oranı en fazla 2 |
+
+### Uçtan uca test (`testler/kum-sisesi-e2e.js`): 22/22
+
+İlk açılış; 10 bölüm baştan sona (süreler 21-35 sn); kayıt ve küçük resimler; ikinci turda bellek büyümüyor; yeniden açılışta raf;
+döküşte, süs tutarken ve finalde raf aç/kapat; süs tutarken yeniden başlat; sonuç ekranında dokunma; dokunma iptali; üfleme sınırı; arka plana geçiş;
+3D açılamazsa oyun yine oynanır; uygulama içi (sahte Capacitor) titreşim, kayıt ve duraklatma. Aynı takım uygulama derlemesi (`www/index.html`) üzerinde de geçti.
+
+### Bot tablosu (sürüm 7; tavan ve yuvarlama sonrası)
+
+| Profil | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Hiç dokunmayan | 44 ★0 | 49 ★0 | 44 ★0 | 42 ★0 | 65 ★0 | 49 ★0 | 39 ★0 | 61 ★0 | 35 ★0 | 48 ★0 |
+| Süpürücü | 89 ★3 | 77 ★1 | 71 ★0 | 62 ★0 | 71 ★0 | 58 ★0 | 72 ★1 | 85 ★2 | 68 ★0 | 68 ★0 |
+| İnsan | 95 ★3 | 84 ★2 | 85 ★2,3 | 91 ★3 | 85 ★2,3 | 81 ★1,7 | 79 ★1,7 | 90 ★3 | 80 ★1,3 | 81 ★1,7 |
+| Kusursuz | 98 ★3 | 97 ★3 | 98 ★3 | 98 ★3 | 96 ★3 | 90 ★3 | 94 ★3 | 94 ★3 | 95 ★3 | 94 ★3 |
+
+### Bilinen eksikler
+
+- Gerçek iPhone'da denenmedi; ilk TestFlight derlemesi performans ve ses için ilk gerçek ölçüm olacak.
+- iOS kenar hareketleri (ana ekran çubuğu) oyunda ertelenmiyor; süs düşmüyor ama döküş durur.
