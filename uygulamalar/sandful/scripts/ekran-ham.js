@@ -1,4 +1,4 @@
-// App Store ham ekran görüntüleri: 430x932 @3x = 1290x2796 (6.9"), WebGL SwiftShader.
+// App Store ham ekran görüntüleri: 430x932 @3x, WebGL SwiftShader (ekran-kare.js bunları 1206x2622 karelere yerleştirir).
 // Kullanım: NODE_PATH=$(npm root -g) node uygulamalar/sandful/scripts/ekran-ham.js en-US|tr-TR
 // Yazı tipi için NUNITO=<@fontsource/nunito/files klasörü> (npm install @fontsource/nunito). Ham görüntüler geçici klasöre yazılır, sonra ekran-kare.js.
 const {chromium}=require('playwright');const fs=require('fs');const path=require('path');

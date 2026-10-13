@@ -63,8 +63,9 @@ Dök, nefes al, rahatla.
 
 ## Ekran görüntüleri
 
-`ekran-goruntuleri/en/` (İngilizce sayfa) ve `ekran-goruntuleri/tr/` (Türkçe sayfa): 6'şar adet, 1290×2796 (6.9" iPhone).
-App Store Connect'te **iPhone 6.9" Display** kutusuna sırayla (01 → 06) sürükle; Apple küçük iPhone'lar için kendisi küçültür.
+`ekran-goruntuleri/en/` (İngilizce sayfa) ve `ekran-goruntuleri/tr/` (Türkçe sayfa): 6'şar adet, 1206×2622 (6.3" iPhone).
+App Store Connect'te **iPhone with Dynamic Island (medium display)** kutusuna sırayla (01 → 06) sürükle; Apple diğer iPhone'lar için kendisi ölçekler.
+(Ekim 2026: bu kutu 1179×2556 ya da 1206×2622 kabul ediyor; 1290×2796 "File dimensions are invalid" hatası verdi.)
 Uygulama sadece iPhone için olduğundan iPad ekran görüntüsü istenmez.
 
 ## Diğer alanlar
