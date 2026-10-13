@@ -46,7 +46,7 @@ Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek ye
    - Ad App Store'da görünen başlıktır (en fazla 30 karakter); telefonda ikonun altında sadece **Sandful** yazar.
    - İsim alınmışsa App Store Connect hemen söyler. "Sandful: Calm Sand Art" dene ve bana yaz.
    - Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi de ekle. Ad her dilde aynı kalsın (marka); alt başlık ve açıklama çevrilir (`magaza/testflight-metinleri.md`).
-2. Uygulama Bilgileri sayfasındaki **Apple Kimliği**'ni (10 haneli sayı) bana yaz. `codemagic.yaml` içindeki `APP_STORE_APPLE_ID` alanına işleyeceğim.
+2. ~~Uygulama Bilgileri sayfasındaki **Apple Kimliği**'ni bana yaz.~~ Yapıldı: uygulama açıldı (ad "Sandful: Relaxing Sand Art"), Apple Kimliği `6822243071` `codemagic.yaml`'a işlendi.
 
 ### 3. Codemagic
 
