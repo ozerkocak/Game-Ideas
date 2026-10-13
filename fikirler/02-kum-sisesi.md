@@ -4,7 +4,7 @@
 > camın içinde katman katman, silik çizgilere göre bir manzara oluşuyor. Sonunda kapak kapanır, şişe rafına dizilir.
 
 Prototip: `prototipler/01-kum-sisesi.html` (10 bölüm). Telefonda tarayıcıda açılarak oynanır.
-**Güncel sürüm 5:** gerçekçi huni akışı ve çarpma, seçilebilir kum sesi, renk ayarı ve kâğıt konfeti. Sürüm 2-5 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
+**Güncel sürüm 6:** tıksız kum sesi, tutun-kay kum fiziği (küçük kaymalar), süs alanı düzeltmesi. Sürüm 2-6 değişiklikleri en altta; üstteki bölümler sürüm 1'i anlatır.
 Ozer ilk turda B'yi seçti ("başlayalım"). Açık sorulara cevap vermedi; kararları ben verdim, aşağıda gerekçeleriyle.
 
 ## Verilen kararlar
@@ -409,3 +409,66 @@ Fizik değişmedi. Kontrol: insan 1. bölüm %94, 5. bölüm %86; hiç dokunmaya
 1. Raftaki üç kum sesinden hangisi en rahatlatıcı? Müziği kapatınca rahatsızlık geçiyor mu?
 2. Huniden akış ve çarpma artık gerçekçi mi?
 3. Grafikte bir sonraki adım için en çok neyi istersin: arka plan ve ışık, cam, kum dokusu, final gösterisi?
+
+## Sürüm 6: tıksız kum sesi, kum kayıyor
+
+Geri bildirim: "Kum sesi hâlâ cızırtılı geliyor. Grafik ve akış konusu çok daha iyi, ama sence daha da gerçekçi hâle getirebilir miyiz?"
+
+### Cızırtının nedeni ve yeni ses
+
+Sürüm 4 ve 5'teki bütün kum sesleri aynı yöntemle yapılmıştı: her tane gürültüyle tetiklenen kısa bir "tık". Frekansı ne olursa olsun binlerce tık bir arada cızırtı gibi duyuluyor.
+Ayrıca ikinci çaların döngü dikişinde birkaç saniyede bir çıt sesi vardı.
+
+Yeni sesler tıksız:
+- Taneler yumuşak zarflı kısa sinüsler (başı ve sonu sıfırdan başlar, tık yapmaz). Altında 4. dereceden süzülmüş, dar bantlı bir hışırtı.
+- 4 kHz üstü yok denecek kadar az; ikinci çalar artık tamponun tamamını biraz farklı hızda çalıyor (dikiş yok).
+- Deniz ve rüzgâr ortam sesleri de daha sıcak (geniş bantlı hışırtı yerine alçak geçiren süzgeç).
+
+| Ses | Merkez frekans | 4 kHz üstü | Karakter |
+|---|---|---|---|
+| Sürüm 5 Yumuşak | 2,1 kHz | %9 | gürültü + tık |
+| Sürüm 5 Parlak | 3,1 kHz | %24 | yoğun tık |
+| **Tıpırtı** (yeni varsayılan) | 1,2 kHz | ~%0 | yumuşak sinüs taneleri + hışırtı, yağmur çubuğu gibi |
+| Kadife | 1,2 kHz | ~%0 | sadece yumuşak hışırtı, hafif dalgalanır |
+| İnce | 1,6 kHz | ~%0 | çok ince, sık taneler |
+| Cam | 2,8 kHz | düşük | boş cama düşen kum: seyrek, yumuşak başlayıp sönen çınlamalar |
+| Kayma | 0,9 kHz | ~%0 | pes, dalgalanan hışırtı |
+
+Rafta "Kum sesi" düğmesiyle üçü arasında geçilir (örnek çalar); "Müzik" ayrı kapatılır.
+
+### Daha gerçekçi kum: tutun-kay
+
+Gerçek bir kum yığınında yamaç yavaş yavaş dikleşir, kritik açıyı geçince ince bir tabaka çığ gibi kayar, yamaç biraz yatar ve yeniden dikleşir.
+Önceki fizikte kum her an anında 34°'de yerine oturuyordu, kayma hiç yoktu.
+
+- Düşen pay 34-39° arası bir eğimde durabilir. Bir yerde eğim 38°'yi geçince oradan bir kayma başlar.
+- Kayan bölge canlı izlenir: içinde eğim ~31,5°'ye iner, kum aktıkça alt uç aşağı uzar, üstteki yamaç da kritik açıya yakınsa kayma yukarı genişler (basamak kalmaz).
+- Bir kayma ~0,5 sn sürer; sürekli dökerken saniyede birkaç küçük kayma olur. Kayan tabaka renkli katmanlarıyla birlikte kayar (gerçek kum sanatındaki ince eğik tabakalar böyle oluşur).
+- Kayma anında yamaçtan parlak taneler akar, kayma sesi kabarır, hafif bir titreşim tıkı gelir.
+- Kütle korunuyor; adım başına ~0,04 ms.
+
+### Süs alanı düzeltmesi
+
+Süsler (tekne, kuğu, ağaç, kaktüs, güneş, ay, yıldız) camda yer kaplıyor ama dökülecek kum miktarından düşülmüyordu; kavanoz hedef çizgisinin üstüne taşıyordu.
+9. bölümde (iki büyük süs) bu ~8 hücre taşma demekti ve kusursuz bot bile bazen 3 yıldızı kaçırıyordu. Artık süs alanı sonraki kumdan düşülüyor.
+Bu düzeltme 7. bölümü düşünmeden süpürene 2 yıldız verecek kadar kolaylaştırdı; kumullar biraz yükseltildi ve içeri alındı.
+
+### Bot tablosu (sürüm 6; bölüm başına 3 koşu, ortalama yüzde ve yıldız)
+
+| Profil | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Hiç dokunmayan | 46 ★0 | 51 ★0 | 45 ★0 | 43 ★0 | 66 ★0 | 51 ★0 | 51 ★0 | 62 ★0 | 37 ★0 | 50 ★0 |
+| Süpürücü | 89 ★3 | 77 ★1 | 71 ★0 | 62 ★0 | 71 ★0 | 58 ★0 | 72 ★0 | 85 ★2 | 67 ★0 | 68 ★0 |
+| Dağınık | 77 ★1,3 | 76 ★1,3 | 77 ★1 | 67 ★0,3 | 72 ★0,3 | 75 ★1 | 76 ★1,3 | 80 ★1,7 | 70 ★0,3 | 71 ★0,7 |
+| İnsan | 95 ★3 | 84 ★2 | 85 ★2,3 | 91 ★3 | 85 ★2,3 | 81 ★1,7 | 79 ★1,3 | 89 ★3 | 80 ★1,7 | 81 ★1,7 |
+| Kusursuz | 98 ★3 | 97 ★3 | 98 ★3 | 98 ★3 | 96 ★3 | 90 ★3 | 94 ★3 | 94 ★3 | 95 ★3 | 94 ★3 |
+
+### Sıradaki büyük adım önerisi: gerçek 3D kum (Ozer'in onayına)
+
+Kalan en büyük gerçekçilik açığı: kum fiziği hâlâ camın ön kesitinde 2D hesaplanıyor; yığın önden arkaya aynı şekilde uzanıyor (koni değil, sırt gibi).
+Gerçek 3D kumda (genişlik × derinlik ızgarası) yığın koni olur, kum her yöne yayılır, ön camda görünen katmanlar camın kendisindeki kesittir.
+
+Ama oyunu değiştirir:
+- Ortaya dökülen kum ön cama 0,6 birim (kavanoz boyunun %28'i) daha alçak ulaşır. Gerçek kum sanatçıları bu yüzden camın dibine döker; huni ön cam boyunca, camın kıvrımını izleyerek gezmeli.
+- Kum arkaya da yayıldığı için katmanlar daha yavaş yükselir; dökülecek miktar, bölümler ve botlar baştan ayarlanmalı.
+- Hesap yükü artar (128 × 64 sütun), telefonda ölçmek gerekir.

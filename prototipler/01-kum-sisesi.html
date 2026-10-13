@@ -140,7 +140,7 @@ const hex=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255];}
 
 // ───────── Kayıt ─────────
 const SKEY='kumSisesi.v3';
-let SAVE={lv:{},snd:true,hap:true,seen:false,kumSes:0,muz:true};
+let SAVE={lv:{},snd:true,hap:true,seen:false,kum6:0,muz:true};
 try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(s&&typeof s==='object')SAVE=Object.assign(SAVE,s);}catch(e){}
 function persist(){try{localStorage.setItem(SKEY,JSON.stringify(SAVE));}catch(e){}}
 
@@ -178,8 +178,8 @@ const LEVELS=[
  {ad:'Vadi',sekil:'kavanoz',ortam:'ruzgar',akis:600,kok:64,ipucu:'Nehri ortaya dök, yeşili kenarlara yığ.',
   katman:[['toprak',flat(.12)],['nehir',nehir6],['cimen',mx(nehir6,u=>.27+.5*Math.abs(u-.5))],['gok',flat(1)]]},
  {ad:'Çöl',sekil:'kase',ortam:'ruzgar',akis:620,kok:63,ipucu:'İki kumul yap. Kaktüs birinci kumulun tepesine, güneş göğün ortasına.',
-  katman:[['colKumu',mx(flat(.18),tri(.22,.42,.5),tri(.78,.5,.5))],['acikSari',flat(.72)],['gok',flat(1)]],
-  sus:[{id:'kaktus',katman:0,oran:1,u:.22},{id:'gunes',katman:2,oran:.45,u:.62}]},
+  katman:[['colKumu',mx(flat(.16),tri(.3,.47,.5),tri(.72,.54,.5))],['acikSari',flat(.75)],['gok',flat(1)]],
+  sus:[{id:'kaktus',katman:0,oran:1,u:.31},{id:'gunes',katman:2,oran:.45,u:.6}]},
  {ad:'Gün batımı',sekil:'kadeh',ortam:'deniz',akis:640,kok:65,ufle:3,ipucu:'Katmanlar yay gibi: kenarlara daha çok dök, ortası çukur kalsın. Fazla yığılan yeri 💨 ile üfle.',
   katman:[['koyuDeniz',yay(.22)],['deniz',yay(.36)],['sari',yay(.5)],['turuncu',yay(.64)],['pembe',yay(.8)],['mor',flat(1)]]},
  {ad:'Göl',sekil:'kavanoz',ortam:'ruzgar',akis:640,kok:60,ufle:3,ipucu:'Toprağı sağa yığ, göl solda düz kalsın. Kuğu göle, ağaç tepeye.',
@@ -224,6 +224,8 @@ function buildLevel(){
   for(const s of ds){const upto=amounts[k]*s.oran;if(upto>used+1e-6){queue.push({t:'kum',c:k,a:upto-used,a0:upto-used});used=upto;}
    const rec=decorRec(s,k);decorList.push(rec);queue.push({t:'sus',rec});}
   if(amounts[k]>used+1e-6)queue.push({t:'kum',c:k,a:amounts[k]-used,a0:amounts[k]-used});}
+ // süs camda yer kaplar: alanı sonraki kumdan düşülür (yoksa kavanoz hedef çizgisinin üstüne taşar)
+ let carry=0;for(const it of queue){if(it.t==='sus')carry+=it.rec.D.w*it.rec.D.h*.92;else if(carry>0){const sub=Math.min(carry,it.a*.5);it.a-=sub;it.a0-=sub;carry-=sub;}}
  qi=0;}
 function decorRec(s,k){const D=DEC[s.id],zx=-rTop+s.u*2*rTop,c0=colOf(zx-D.w/2),c1=colOf(zx+D.w/2);
  const base=c=>k>0?tTop[k-1][c]:floorY[c],top=c=>tTop[k][c];let bot=0;
@@ -242,7 +244,25 @@ function transfer(s,d,m){let moved=0;const b=s*MAXS;while(m>1e-9&&segN[s]>0){con
 // Düşen her kum payı yokuştan aşağı yuvarlanır ve sığabildiği ilk yerde kalır: yüzey hiçbir an 34°'yi aşmaz,
 // iğne ya da kule oluşmaz, kesitler yumuşak eğriler olur. Eğim her payda biraz değişir, yamaç doğal pürüzlü görünür.
 // Payın yuvarlandığı yol, görüntüde yamaçtan kayan taneler olarak çizilir.
-function pourAt(c,a,col){let g=0,c0=c;const T=TALUS*(.9+rnd()*.14);
+// Tutun-kay (gerçek kum gibi): düşen pay 34-39° arası bir eğimde durabilir, yamaç yavaş yavaş dikleşir.
+// Bir yerde eğim kritik açıyı (38°) geçince oradan aşağı ince bir tabaka birkaç kare içinde kayar ve yamaç ~31,5°'ye iner (küçük çığ).
+const TSTOP=Math.tan(36.5*Math.PI/180)*DX,TCRIT=Math.tan(38*Math.PI/180)*DX,TDYN=Math.tan(31.5*Math.PI/180)*DX,AVW=45;
+let avs=[],avMoved=0;
+function avCheck(c){for(const s of[-1,1]){const n=c+s;if(n<0||n>=NC||!valid[n]||!valid[c])continue;
+ if(topY[c]-topY[n]>TCRIT&&!avs.some(a=>a.s===s&&(c-a.lo)*s>=-6&&(c-a.hi)*s<=6)){avs.push({c,s,t:0,lo:c,hi:c});if(!BOT)vib(6,true);}}}
+// Kayan bölge [lo..hi] canlı izlenir: içinde eğim TDYN'e iner; kum aktıkça alt uç aşağı uzar,
+// üst uçtaki yamaç da kritik açıya yakınsa kayma yukarı genişler (yamaçta basamak kalmaz).
+function avStep(){avMoved=0;
+ for(let i=avs.length-1;i>=0;i--){const a=avs[i],s=a.s;let moved=0;if(a.lo==null){a.lo=a.c;a.hi=a.c;}
+  for(let g=0;g<4;g++){const u=a.lo-s;if(u<0||u>=NC||!valid[u]||Math.abs(u-a.c)>30||topY[u]-topY[a.lo]<=TCRIT*.92)break;a.lo=u;}
+  const len=Math.abs(a.hi-a.lo)+1;
+  for(let k=0;k<=len;k++){const p=a.lo+s*k,q=p+s;if(q<0||q>=NC||!valid[p]||!valid[q])break;const d=topY[p]-topY[q];
+   if(d>TDYN){const m=transfer(p,q,(d-TDYN)*.35);if(m>0){moved+=m;if((q-a.hi)*s>0&&m>1e-5)a.hi=q;}}
+   else if((p-a.hi)*s>=0)break;}
+  a.t+=DT;avMoved+=moved;
+  if(!BOT&&moved>2e-5){const n=segN[a.lo];spawnTrickle(a.lo,a.hi,n?Math.min(segC[a.lo*MAXS+n-1]%100,ncol-1):0);}
+  if((a.t>.08&&moved<4e-5)||a.t>.5)avs.splice(i,1);}}
+function pourAt(c,a,col){let g=0,c0=c;const T=TSTOP*(.9+rnd()*.2);
  while(a>1e-9&&g++<NC*2){const hl=valid[c-1]?topY[c-1]:1e9,hr=valid[c+1]?topY[c+1]:1e9,h=topY[c],low=Math.min(hl,hr);
   if(h-low>T){c=hl<hr?c-1:c+1;continue;}
   const put=Math.min(a,Math.max(low+T-h,0));if(put>0){addTop(c,col,put);a-=put;}
@@ -251,7 +271,7 @@ function pourAt(c,a,col){let g=0,c0=c;const T=TALUS*(.9+rnd()*.14);
 function deposit(x,col,area){const c0=colOf(x);let ws=0;const w=[];
  for(let k=-7;k<=7;k++){const c=c0+k,v=(c>=0&&c<NC&&valid[c])?Math.exp(-((k/SIG)**2)):0;w.push(v);ws+=v;}
  if(ws<=0)return;let far=0;
- for(let k=-7;k<=7;k++)if(w[k+7]>0){const d=pourAt(c0+k,area*w[k+7]/ws/DX,col);if(Math.abs(d)>Math.abs(far))far=d;}
+ for(let k=-7;k<=7;k++)if(w[k+7]>0){const d=pourAt(c0+k,area*w[k+7]/ws/DX,col);avCheck(clamp(c0+k+d,0,NC-1));if(Math.abs(d)>Math.abs(far))far=d;}
  if(!BOT&&Math.abs(far)>4){slideFlux+=Math.min(1,Math.abs(far)/40);spawnTrickle(c0,c0+far,col);}}
 // üfleme ya da süs sonrası dikleşen yerleri düzelt (tam dengeleme, ileri-geri taramalar)
 function relax(){for(let it=0;it<60;it++){let f=0;const fw=it&1;
@@ -269,7 +289,7 @@ function updateSlices(){let w=0;
 function startLevel(n,opt={}){
  LV=n;L=LEVELS[n];BOT=!!opt.bot;seed=(opt.seed!=null?opt.seed:(Date.now()&0xffffff))||1;
  buildLevel();
- slices=[];noz=nozT=0;state='ready';T=0;pourStart=1e9;pouring=false;flowNow=0;emitting=false;wasEmit=false;landed=0;slideFlux=0;onTarget=false;streakT=0;offT=9;streakLvl=0;
+ slices=[];avs=[];avMoved=0;noz=nozT=0;state='ready';T=0;pourStart=1e9;pouring=false;flowNow=0;emitting=false;wasEmit=false;landed=0;slideFlux=0;onTarget=false;streakT=0;offT=9;streakLvl=0;
  nextBeat=0;mi=0;melody=makeMelody(!!L.minor,n*7919+13);pct=0;puffs=L.ufle||0;decor=null;holdT=0;settleT=0;popped=false;waveY=-9;sweep=-1;lidY=null;
  resultShown=false;snapped=false;pendingCheck=null;nextTick=0;wavePlayed=[];finalStars=0;
  if(BOT)return;
@@ -296,8 +316,8 @@ function step(){
  else if(state==='hold'){holdT+=DT;decorFollow();}
  else if(state==='drop')dropDecor();
  wasEmit=emitting;
- updateSlices();
- if(state==='settle'){settleT+=DT;if(!slices.length&&settleT>.45)startFinale();}
+ updateSlices();avStep();
+ if(state==='settle'){settleT+=DT;if(!slices.length&&(!avs.length||settleT>2)&&settleT>.45)startFinale();}
  if(state==='finale')finaleStep();
  if(state!=='ready'&&state!=='result'&&(Math.round(T/DT)%6===0))pct=score();
  if(pendingCheck&&T>=pendingCheck.at&&!slices.length){layerCheck(pendingCheck.c);pendingCheck=null;}
@@ -316,7 +336,7 @@ function step(){
  // kum tanesi titreşimi: yere düşen kum kadar
  const lr=Math.min(1.2,landed/(L.akis*FLOWK*DT+1e-12)),gf=landed>0?glassLand/landed:0,sp=clamp(impact/6,.35,1);
  if(landed>0&&T>=nextTick){nextTick=T+.055+.07*(1-Math.min(1,lr))+Math.random()*.04;if(PLG.Haptics||navigator.vibrate)vib(onTarget?7:5,true);else tickDue=true;}
- setPour(lr*(1-gf)*(.55+.45*sp),lr*gf,Math.min(1,slideFlux/6),clamp(landX/RW,-1,1)*.45);
+ setPour(lr*(1-gf)*(.55+.45*sp),lr*gf,Math.min(1,slideFlux/6+avMoved*30),clamp(landX/RW,-1,1)*.45);
  if(AC)padTick();
  if(L.ortam==='gece'&&T>=nextCricket){nextCricket=T+.9+Math.random()*.9;cricket();}}
 function emit(){
@@ -417,45 +437,43 @@ let htmlUnlocked=false;function htmlAudioUnlock(){if(htmlUnlocked)return;htmlUnl
  const a=new Audio(URL.createObjectURL(new Blob([buf],{type:'audio/wav'})));a.setAttribute('playsinline','');a.volume=.01;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{htmlUnlocked=false;});}catch(e){htmlUnlocked=false;}}
 function unlockAudio(){htmlAudioUnlock();if(!AC)return;if(AC.state!=='running')AC.resume().catch(()=>{});try{const b=AC.createBuffer(1,1,22050),s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.start(0);}catch(e){}}
 function gj(){return Math.sqrt(-2*Math.log(Math.random()+1e-9))*Math.cos(6.2832*Math.random());}
-// Tane bulutu: sec saniyelik döngü; rate tane/sn, frekans f0-f1 Hz, Q q0-q1, sönüm d0-d1 sn, genlik dağılımı sig.
-// Altında süzülmüş hışırtı (bw: düzeyi, bhp-blp: bandı), yavaş genlik dalgalanması (mod, modHz), kümelenme (burst). Sonda hp-lp süzgeci.
-// Sayfa açılınca karelere bölünerek hesaplanır (her karede birkaç ms), ilk dokunuşu bekletmez.
+// Kum sesi tıksız yapılır: gürültüyle tetiklenen kısa "tık"lar binlercesi bir arada cızırtı gibi duyuluyordu (sürüm 4-5).
+// Taneler yumuşak zarflı kısa sinüslerdir (sin: Hann zarfı, ring: cam gibi yumuşak başlayıp sönen), altında 4. dereceden süzülmüş hışırtı (bw, bhp-blp),
+// hızlı ve yavaş genlik dalgalanması (mod, mod2). 4 kHz üstü yok denecek kadar az. Sayfa açılınca karelere bölünerek hesaplanır.
 const SR0=48000;let sndJob=null,sndQ=[],sndCache={},sndPreview=false;
 function biq(d,type,f,Q){const w=6.2832*f/SR0,c=Math.cos(w),al=Math.sin(w)/(2*Q),a0=1+al;let b0,b1,b2;
  if(type==='lp'){b0=(1-c)/2;b1=1-c;b2=b0;}else{b0=(1+c)/2;b1=-(1+c);b2=b0;}
  b0/=a0;b1/=a0;b2/=a0;const a1=-2*c/a0,a2=(1-al)/a0;let x1=0,x2=0,y1=0,y2=0;const n=d.length;
  for(let pass=0;pass<2;pass++)for(let i=0;i<n;i++){const x=d[i],y=b0*x+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=x;y2=y1;y1=y;if(pass)d[i]=y;}}
 function rmsN(d,v){let s=0;for(let i=0;i<d.length;i++)s+=d[i]*d[i];const g=v/Math.sqrt(s/d.length+1e-12);for(let i=0;i<d.length;i++)d[i]*=g;}
-function* grainGen(o){const sr=SR0,n=Math.floor(sr*o.sec),d=new Float32Array(n),tmp=new Float32Array(Math.ceil(sr*.03)),N=Math.floor(o.rate*o.sec);
- for(let k=0;k<N;k++){if((k&63)===63)yield;const t0=Math.floor(Math.random()*n);
-  if(o.burst){const ph=t0/n*6.2832,env=.5+.5*Math.sin(ph*7+2*Math.sin(ph*3));if(Math.random()>env*env)continue;}
-  const f=o.f0*Math.pow(o.f1/o.f0,Math.random()),Q=o.q0+(o.q1-o.q0)*Math.random(),dec=(o.d0+(o.d1-o.d0)*Math.random())*sr,w=6.2832*f/sr,r=Math.exp(-w/(2*Q)),a1=2*r*Math.cos(w),a2=-r*r,ek=Math.exp(-1/dec);
-  const L=Math.min(tmp.length,Math.ceil(dec*4.5)),ex=Math.max(2,Math.round(sr/f*.5));let y1=0,y2=0,pk=1e-9,e=1;
-  for(let i=0;i<L;i++){const y=(i<ex?Math.random()*2-1:0)+a1*y1+a2*y2;y2=y1;y1=y;const v=y*e;e*=ek;tmp[i]=v;if(v>pk)pk=v;else if(-v>pk)pk=-v;}
-  const amp=Math.exp(gj()*o.sig)/pk;if(t0+L<=n){for(let i=0;i<L;i++)d[t0+i]+=tmp[i]*amp;}else for(let i=0;i<L;i++)d[(t0+i)%n]+=tmp[i]*amp;}
- yield;rmsN(d,o.gw);
- if(o.bw){const b=new Float32Array(n);for(let i=0;i<n;i++)b[i]=Math.random()*2-1;yield;biq(b,'hp',o.bhp,.7);biq(b,'lp',o.blp,.7);yield;rmsN(b,o.bw);for(let i=0;i<n;i++)d[i]+=b[i];}
- if(o.mod){const m=Math.max(2,Math.round(o.sec*o.modHz)),v=Array.from({length:m},()=>Math.random());
-  for(let i=0;i<n;i++){const f=i/n*m,j=Math.floor(f),t=f-j,q=t*t*(3-2*t),a=v[j%m],b=v[(j+1)%m];d[i]*=1+o.mod*((a+(b-a)*q)*2-1);}}
+function amod(d,depth,hz,sec){const n=d.length,m=Math.max(2,Math.round(sec*hz)),v=Array.from({length:m},()=>Math.random());
+ for(let i=0;i<n;i++){const f=i/n*m,j=Math.floor(f),t=f-j,q=t*t*(3-2*t),a=v[j%m],b=v[(j+1)%m];d[i]*=1+depth*((a+(b-a)*q)*2-1);}}
+function* grainGen(o){const sr=SR0,n=Math.floor(sr*o.sec),d=new Float32Array(n);
+ if(o.kind){const N=Math.floor(o.rate*o.sec),att=.0012*sr;
+  for(let k=0;k<N;k++){if((k&127)===127)yield;const t0=Math.floor(Math.random()*n),f=o.f0*Math.pow(o.f1/o.f0,Math.random()),L=Math.floor((o.u0+(o.u1-o.u0)*Math.random())*sr),w=6.2832*f/sr,amp=Math.exp(gj()*o.sig),c=Math.cos(w),sn=Math.sin(w),tau=L/5;
+   let re=1,im=0;for(let i=0;i<L;i++){const env=o.kind==='ring'?Math.min(1,i/att)*Math.exp(-i/tau):.5-.5*Math.cos(6.2832*i/L);d[(t0+i)%n]+=im*env*amp;const r2=re*c-im*sn;im=re*sn+im*c;re=r2;}}
+  yield;rmsN(d,o.gw);}
+ if(o.bw){const b=new Float32Array(n);for(let i=0;i<n;i++)b[i]=Math.random()*2-1;yield;biq(b,'hp',o.bhp,.7);biq(b,'lp',o.blp,.7);yield;biq(b,'hp',o.bhp,.7);biq(b,'lp',o.blp,.7);yield;rmsN(b,o.bw);for(let i=0;i<n;i++)d[i]+=b[i];}
+ if(o.mod)amod(d,o.mod,o.modHz,o.sec);if(o.mod2)amod(d,o.mod2,o.mod2Hz,o.sec);
  yield;biq(d,'hp',o.hp,.7);biq(d,'lp',o.lp,.7);rmsN(d,.2);
  return d;}
-// Kum sesleri (rafta seçilir): yumuşak (varsayılan: sıcak hışırtı + seyrek tane), parlak (sürüm 4), çıtır (seyrek, belirgin taneler).
-// cam: boş cam tabana düşüş, kay: yamaçtan kayma.
+// Kum sesleri (rafta seçilir): tıpırtı (varsayılan: yumuşak sinüs taneleri + hışırtı, yağmur çubuğu gibi), kadife (sadece yumuşak hışırtı), ince (çok ince, sık taneler).
+// cam: boş cam tabana düşüş (yumuşak çınlayan seyrek taneler), kay: yamaçtan kayma (pes, dalgalanan hışırtı).
 const SND={
- yumusak:{sec:4.4,rate:1300,f0:1100,f1:4200,q0:.8,q1:2,d0:.0003,d1:.0009,sig:.5,gw:.55,bw:1,bhp:380,blp:3200,mod:.22,modHz:7,hp:260,lp:6500},
- parlak:{sec:4.4,rate:5200,f0:1700,f1:6500,q0:1.4,q1:4,d0:.0004,d1:.0012,sig:.6,gw:1,bw:.25,bhp:500,blp:9000,hp:500,lp:9000},
- citir:{sec:4.4,rate:2300,f0:1500,f1:7000,q0:2,q1:5,d0:.0003,d1:.001,sig:.75,gw:1,bw:.12,bhp:800,blp:6000,mod:.15,modHz:9,hp:600,lp:9500},
- cam:{sec:3.3,rate:700,f0:2600,f1:7000,q0:6,q1:16,d0:.0015,d1:.005,sig:.7,gw:1,bw:.05,bhp:900,blp:8000,hp:900,lp:9000},
- kay:{sec:3.7,rate:2600,f0:900,f1:3600,q0:1,q1:2.4,d0:.0005,d1:.0014,sig:.6,gw:.8,bw:.6,bhp:400,blp:2800,mod:.45,modHz:5,hp:300,lp:6000}};
-const KUM_SES=['yumusak','parlak','citir'],KUM_AD=['Yumuşak','Parlak','Çıtır'];
-const kumAdi=()=>KUM_SES[SAVE.kumSes|0]||'yumusak';
+ tipirti:{sec:4.4,kind:'sin',rate:650,f0:550,f1:2300,u0:.0025,u1:.007,sig:.45,gw:1,bw:.5,bhp:400,blp:1800,mod:.1,modHz:6,hp:250,lp:4500},
+ kadife:{sec:4.4,bw:1,bhp:380,blp:1900,mod:.18,modHz:11,mod2:.12,mod2Hz:.7,hp:200,lp:4500},
+ ince:{sec:4.4,kind:'sin',rate:2400,f0:900,f1:2800,u0:.0012,u1:.0025,sig:.4,gw:1,bw:.35,bhp:500,blp:2400,hp:300,lp:3800},
+ cam:{sec:3.3,kind:'ring',rate:110,f0:1700,f1:4200,u0:.02,u1:.08,sig:.5,gw:1,hp:600,lp:6000},
+ kay:{sec:3.7,bw:1,bhp:300,blp:1400,mod:.45,modHz:4,mod2:.2,mod2Hz:1.1,hp:200,lp:3000}};
+const KUM_SES=['tipirti','kadife','ince'],KUM_AD=['Tıpırtı','Kadife','İnce'];
+const kumAdi=()=>KUM_SES[SAVE.kum6|0]||'tipirti';
 function sndNeed(names){names.forEach(nm=>{if(!sndCache[nm]&&!sndQ.includes(nm))sndQ.push(nm);});if(!sndJob)sndNext();}
 function sndNext(){const nm=sndQ.shift();if(!nm){sndJob=null;return;}const g=grainGen(SND[nm]);
  sndJob={run(ms){const t=performance.now();while(performance.now()-t<ms){const r=g.next();if(r.done){sndCache[nm]=r.value;sndNext();attachPour();return;}}}};}
 function sndStart(){sndNeed([kumAdi(),'cam','kay']);}
 // her katman iki çalardan: aynı tampon farklı yerden ve biraz farklı hızda; döngünün tekrarı duyulmaz
 function mkLayer(d){const buf=AC.createBuffer(1,d.length,SR0);buf.getChannelData(0).set(d);const g=AC.createGain();g.gain.value=0;g.connect(pourPan||sandBus);const dur=buf.duration,ss=[];
- for(const [ls,le,rt] of [[0,dur,1],[dur*.23,dur*.93,.97]]){const s=AC.createBufferSource();s.buffer=buf;s.loop=true;s.loopStart=ls;s.loopEnd=le;s.playbackRate.value=rt;const h=AC.createGain();h.gain.value=.72;s.connect(h);h.connect(g);s.start(AC.currentTime,ls+Math.random()*(le-ls)*.9);ss.push(s);}
+ for(const rt of [1,.968]){const s=AC.createBufferSource();s.buffer=buf;s.loop=true;s.playbackRate.value=rt;const h=AC.createGain();h.gain.value=.72;s.connect(h);h.connect(g);s.start(AC.currentTime,Math.random()*dur*.95);ss.push(s);}
  return{g,ss};}
 function attachPour(){if(!AC)return;if(!pourG)pourG=[null,null,null];const want=[kumAdi(),'cam','kay'];
  for(let k=0;k<3;k++){const nm=want[k];if((pourG[k]&&pourG[k].nm===nm)||!sndCache[nm])continue;
@@ -483,9 +501,9 @@ function setPour(kum,cam,kay,pan){if(!AC||!pourG)return;const v=[kum*.45,cam*.3,
 // ortam: deniz (yavaş dalga hışırtısı), rüzgâr, gece; altında çok alçak, yavaş akor değiştiren yumuşak bir ped
 function ambient(kind){if(!AC)return;ambNodes.forEach(n=>{try{n.stop?n.stop():n.disconnect();}catch(e){}});ambNodes=[];
  const s=AC.createBufferSource();s.buffer=noiseBuf;s.loop=true;const f=AC.createBiquadFilter(),gg=AC.createGain(),lfo=AC.createOscillator(),lg=AC.createGain(),lfo2=AC.createOscillator(),lg2=AC.createGain();
- if(kind==='deniz'){f.type='bandpass';f.frequency.value=900;f.Q.value=.45;gg.gain.value=.03;lfo.frequency.value=.075;lg.gain.value=.024;lfo.connect(lg);lg.connect(gg.gain);lfo2.frequency.value=.075;lg2.gain.value=420;lfo2.connect(lg2);lg2.connect(f.frequency);}
- else if(kind==='ruzgar'){f.type='bandpass';f.frequency.value=650;f.Q.value=.9;gg.gain.value=.02;lfo.frequency.value=.05;lg.gain.value=280;lfo.connect(lg);lg.connect(f.frequency);lfo2.frequency.value=.031;lg2.gain.value=.01;lfo2.connect(lg2);lg2.connect(gg.gain);}
- else{f.type='bandpass';f.frequency.value=700;f.Q.value=.6;gg.gain.value=.006;lfo.frequency.value=.1;lg.gain.value=0;lfo.connect(lg);lfo2.frequency.value=.1;lg2.gain.value=0;lfo2.connect(lg2);}
+ if(kind==='deniz'){f.type='lowpass';f.frequency.value=650;f.Q.value=.5;gg.gain.value=.03;lfo.frequency.value=.075;lg.gain.value=.022;lfo.connect(lg);lg.connect(gg.gain);lfo2.frequency.value=.075;lg2.gain.value=260;lfo2.connect(lg2);lg2.connect(f.frequency);}
+ else if(kind==='ruzgar'){f.type='bandpass';f.frequency.value=480;f.Q.value=1;gg.gain.value=.017;lfo.frequency.value=.05;lg.gain.value=280;lfo.connect(lg);lg.connect(f.frequency);lfo2.frequency.value=.031;lg2.gain.value=.01;lfo2.connect(lg2);lg2.connect(gg.gain);}
+ else{f.type='lowpass';f.frequency.value=500;f.Q.value=.5;gg.gain.value=.006;lfo.frequency.value=.1;lg.gain.value=0;lfo.connect(lg);lfo2.frequency.value=.1;lg2.gain.value=0;lfo2.connect(lg2);}
  s.connect(f);f.connect(gg);gg.connect(master);s.start();lfo.start();lfo2.start();ambNodes=[s,lfo,lfo2,gg];
  if(!pad){const pf=AC.createBiquadFilter(),pg=AC.createGain();pf.type='lowpass';pf.frequency.value=900;pf.Q.value=.3;pg.gain.value=0;pf.connect(pg);pg.connect(musicBus);pg.gain.setTargetAtTime(.015,AC.currentTime,2.5);
   const vo=[];for(let k=0;k<3;k++)for(const det of[-5,5]){const o=AC.createOscillator(),og=AC.createGain();o.type='triangle';o.detune.value=det;o.frequency.value=110;og.gain.value=k===0?.5:.32;o.connect(og);og.connect(pf);o.start();vo.push({o,k});}
@@ -1019,7 +1037,7 @@ function openRaf(){if(state!=='menu'){prevState=state;state='menu';}pouring=fals
    if(open)b.onclick=()=>{closeRaf(true);startLevel(k);};row.appendChild(b);}
   sh.appendChild(row);}
  $('rafSub').textContent=total+' / '+LEVELS.length*3+' ★';
- $('sSnd').textContent='Ses: '+(SAVE.snd===false?'kapalı':'açık');$('sMuz').textContent='Müzik: '+(SAVE.muz===false?'kapalı':'açık');$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kumSes|0];$('sHap').textContent='Titreşim: '+(SAVE.hap===false?'kapalı':'açık');
+ $('sSnd').textContent='Ses: '+(SAVE.snd===false?'kapalı':'açık');$('sMuz').textContent='Müzik: '+(SAVE.muz===false?'kapalı':'açık');$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kum6|0];$('sHap').textContent='Titreşim: '+(SAVE.hap===false?'kapalı':'açık');
  $('rafClose').style.display=prevState&&L?'block':'none';$('raf').classList.add('show');}
 function closeRaf(skip){$('raf').classList.remove('show');if(!skip&&prevState){state=prevState;if(state==='result')$('result').classList.add('show');}prevState=null;}
 
@@ -1040,7 +1058,7 @@ $('rNext').onclick=()=>{if(LV>=LEVELS.length-1){prevState=null;openRaf();}else s
 $('rafClose').onclick=()=>closeRaf();
 $('sSnd').onclick=()=>{SAVE.snd=SAVE.snd===false;persist();if(master)master.gain.value=SAVE.snd?.75:0;$('sSnd').textContent='Ses: '+(SAVE.snd?'açık':'kapalı');};
 $('sMuz').onclick=()=>{SAVE.muz=SAVE.muz===false;persist();if(musicBus)musicBus.gain.value=SAVE.muz?1:0;$('sMuz').textContent='Müzik: '+(SAVE.muz?'açık':'kapalı');};
-$('sKum').onclick=()=>{initAudio();SAVE.kumSes=((SAVE.kumSes|0)+1)%3;persist();$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kumSes];sndNeed([kumAdi()]);attachPour();previewKum();};
+$('sKum').onclick=()=>{initAudio();SAVE.kum6=((SAVE.kum6|0)+1)%3;persist();$('sKum').textContent='Kum sesi: '+KUM_AD[SAVE.kum6];sndNeed([kumAdi()]);attachPour();previewKum();};
 $('sHap').onclick=()=>{SAVE.hap=SAVE.hap===false;persist();$('sHap').textContent='Titreşim: '+(SAVE.hap?'açık':'kapalı');if(SAVE.hap)vib(20);};
 document.addEventListener('visibilitychange',()=>{pouring=false;down=false;if(!AC)return;if(document.hidden)AC.suspend().catch(()=>{});else AC.resume().catch(()=>{});});
 

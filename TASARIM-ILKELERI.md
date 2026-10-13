@@ -55,6 +55,9 @@ Bu dosya bütün oyunlar için ortak kuralları toplar. Kaynağı Domino Chase'i
 | Yüzeyde kayan taneler yüzeyle aynı renkteyse görünmez; bir ton açık yap. Çarpmayı küçük bir sıçrama tacıyla göster | Kum Şişesi sürüm 5 |
 | Ses geri bildirimi belirsizse tahminle değiştirmeye devam etme: oyunun içine seçenek koy (rafta kum sesi, müzik ayrı kapatılır), Ozer hangisini seçtiğini söylesin | Kum Şişesi sürüm 5 |
 | Sürekli çalan döngü sesin tekrarı duyulur; uzun tampon ve iki çalarla (farklı yer, farklı hız) tekrarı kır | Kum Şişesi sürüm 5 |
+| "Cızırtı" = binlerce tık. Gürültüyle tetiklenen kısa tanelerle yapılan ses frekansı ne olursa olsun cızırdar. Sürekli sesleri tıksız yap: yumuşak zarflı sinüs taneleri, dar bantlı süzülmüş hışırtı, 4 kHz üstünü kes. Döngü dikişinde çıt olmasın | Kum Şişesi sürüm 5 → 6 |
+| Gerçekçilik için davranış da gerekir, sadece görüntü değil: kum yamacı dikleşip küçük kaymalarla yatmalı (tutun-kay) | Kum Şişesi sürüm 6 |
+| Oyuncunun yerleştirdiği nesneler (süs) hacim kaplıyorsa malzeme miktarından düş; yoksa sonuç hedefin üstüne taşar ve kusursuz oyun bile cezalanır | Kum Şişesi sürüm 6 |
 
 ## Reddedilmiş yönler
 
