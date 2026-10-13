@@ -81,9 +81,15 @@ sonra **Sandful · iOS → TestFlight** iş akışını başlat. Bu yolda derlem
 
 ## Mağazaya çıkarken (TestFlight'tan sonra)
 
-- **Ülkeler:** Fiyatlandırma ve Bulunabilirlik'te bütün ülkeler açık kalabilir (oyun internetsiz, veri toplamıyor). Domino'daki gibi sınırlamak istersen Türkiye, ABD ve Avrupa'yı seç.
-- **Alt başlık (30 karakter):** EN "Pour sand, build calm scenes", TR "Kum dök, sakin manzaralar kur".
-- **Gizlilik:** "Data Not Collected". Gizlilik politikası taslağı `magaza/gizlilik-politikasi.md`.
+Bütün alanların değerleri: `magaza/app-store-metinleri.md` (ad, alt başlık, açıklama, anahtar kelimeler, kategori, yaş anketi, gizlilik beyanı, inceleme notu).
+
+1. **Gizlilik ve destek sayfası:** `magaza/site/privacy.html` ve `magaza/site/index.html`. İçlerindeki [EMAIL], [ADDRESS] ve [DATE] doldurulup herkese açık bir adreste yayınlanır;
+   adresler App Store Connect'te Privacy Policy URL ve Support URL alanlarına girilir.
+2. **Ekran görüntüleri:** `magaza/ekran-goruntuleri/en/` ve `tr/` (6'şar, 1290×2796). iPhone 6.9" Display kutusuna 01 → 06 sırasıyla sürüklenir.
+3. **Metinler** İngilizce ve Türkçe sayfaya girilir, **Build** olarak TestFlight'taki derleme seçilir.
+4. **App Privacy:** "Data Not Collected". **Age Rating:** bütün cevaplar "None/No" → 4+.
+5. **Business:** AB'de yayın için "trader" (DSA) bilgisi girilmiş olmalı (hesap düzeyinde, bir kez).
+6. **Add for Review** → **Submit**. İnceleme genelde 1-2 gün; onaylanınca "Manually release" seçildiyse yayın düğmesine sen basarsın.
 
 ## Android deneyiciler için
 
@@ -104,3 +110,4 @@ npm run native     # ios/ ve android/ projelerini sıfırdan üretir, iOS ayarla
 - Oyunda değişiklik yapınca sadece `prototipler/01-kum-sisesi.html` düzenlenir; `ios-hazirla.sh` (ya da Codemagic) her derlemede `www/`'yi yeniden üretir.
 - Yeni sürüm yüklemeden önce `ios/App/App.xcodeproj/project.pbxproj` içindeki `CURRENT_PROJECT_VERSION` 1 artırılır (App Store aynı numarayı iki kez kabul etmez).
 - İkon ve açılış ekranı `scripts/make-icon.py` ile çizilir (`resources/`), `npm run assets` bütün boyutları üretir.
+- App Store ekran görüntüleri: `scripts/ekran-ham.js en-US` ve `tr-TR` (oyundan 1290×2796 çeker), ardından `scripts/ekran-kare.js` (başlık ve telefon çerçevesi ekler). Oyun görünümü değişince yeniden üretilir.

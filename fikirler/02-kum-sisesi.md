@@ -525,7 +525,10 @@ dil (İngilizce ve Almanca telefonda İngilizce, Türkçe harf kalmıyor; Türk�
 
 | Sürüm (derleme) | Tarih | Not |
 |---|---|---|
-| 1.0 (1) | 13 Ekim 2026 | İlk yükleme, Ozer Mac'te Xcode ile (Distribute App) |
+| 1.0 (1) | 13 Ekim 2026 | İlk yükleme, Ozer Mac'te Xcode ile (Distribute App). Ozer iPhone'da denedi: "Her şey güzel şu anda." |
+
+App Store hazırlığı: mağaza metinleri (`uygulamalar/sandful/magaza/app-store-metinleri.md`), iki dilde 6'şar ekran görüntüsü (1290×2796, başlıklı),
+gizlilik ve destek sayfaları (`magaza/site/`). Para kazanma önerisi ayrı dosyada: `fikirler/03-sandful-gelir.md` (Ozer'in onayına).
 
 ### Bilinen eksikler
 
