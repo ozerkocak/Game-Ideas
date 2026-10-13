@@ -1,13 +1,12 @@
 # Sandful · Gizlilik Politikası / Privacy Policy
 
-> Taslak. Yayınlamadan önce şirket adresi ve iletişim bilgisi doldurulmalı, gerekirse hukuk danışmanına gösterilmeli.
-> Draft. Fill in the company address and contact details before publishing; have it reviewed if needed.
+> Yayınlanan sürüm: `site/privacy.html` (bu dosya ile aynı metin). Gerekirse hukuk danışmanına gösterilmeli.
 
 ---
 
 ## Türkçe
 
-**Son güncelleme:** [TARİH]
+**Son güncelleme:** 13 Ekim 2026
 
 Sandful ("Oyun"), Investa Teknoloji Anonim Şirketi ("biz") tarafından geliştirilmektedir.
 
@@ -19,13 +18,13 @@ Sandful ("Oyun"), Investa Teknoloji Anonim Şirketi ("biz") tarafından gelişti
 
 **Çocuklar.** Oyun her yaştan kullanıcıya uygundur ve çocuklardan bilerek veri toplamaz.
 
-**İletişim.** Sorularınız için: [E-POSTA] · Investa Teknoloji Anonim Şirketi, [ADRES]
+**İletişim.** Sorularınız için: develop@investa.com.tr · Investa Teknoloji Anonim Şirketi, Gülbahçe Mahallesi, İçmeler Caddesi D:B05, No:14-1, 35433 Urla, İzmir, Türkiye
 
 ---
 
 ## English
 
-**Last updated:** [DATE]
+**Last updated:** October 13, 2026
 
 Sandful (the "Game") is developed by Investa Teknoloji Anonim Şirketi ("we").
 
@@ -37,4 +36,4 @@ Sandful (the "Game") is developed by Investa Teknoloji Anonim Şirketi ("we").
 
 **Children.** The Game is suitable for all ages and does not knowingly collect data from children.
 
-**Contact.** Questions: [EMAIL] · Investa Teknoloji Anonim Şirketi, [ADDRESS]
+**Contact.** Questions: develop@investa.com.tr · Investa Teknoloji Anonim Şirketi, Gülbahçe Mahallesi, İçmeler Caddesi D:B05, No:14-1, 35433 Urla, İzmir, Türkiye

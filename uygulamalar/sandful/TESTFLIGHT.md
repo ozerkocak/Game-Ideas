@@ -83,8 +83,8 @@ sonra **Sandful · iOS → TestFlight** iş akışını başlat. Bu yolda derlem
 
 Bütün alanların değerleri: `magaza/app-store-metinleri.md` (ad, alt başlık, açıklama, anahtar kelimeler, kategori, yaş anketi, gizlilik beyanı, inceleme notu).
 
-1. **Gizlilik ve destek sayfası:** `magaza/site/privacy.html` ve `magaza/site/index.html`. İçlerindeki [EMAIL], [ADDRESS] ve [DATE] doldurulup herkese açık bir adreste yayınlanır;
-   adresler App Store Connect'te Privacy Policy URL ve Support URL alanlarına girilir.
+1. **Gizlilik ve destek sayfası:** `magaza/site/` klasöründeki iki dosya şirket sitesinde `sandful` klasörüne yüklenir:
+   destek `https://www.investa.com.tr/sandful/`, gizlilik `https://www.investa.com.tr/sandful/privacy.html`. Bu adresler App Store Connect'te Support URL ve Privacy Policy URL alanlarına girilir; Apple göndermeden önce açılıp açılmadığına bakar.
 2. **Ekran görüntüleri:** `magaza/ekran-goruntuleri/en/` ve `tr/` (6'şar, 1290×2796). iPhone 6.9" Display kutusuna 01 → 06 sırasıyla sürüklenir.
 3. **Metinler** İngilizce ve Türkçe sayfaya girilir, **Build** olarak TestFlight'taki derleme seçilir.
 4. **App Privacy:** "Data Not Collected". **Age Rating:** bütün cevaplar "None/No" → 4+.

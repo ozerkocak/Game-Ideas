@@ -75,8 +75,8 @@ Uygulama sadece iPhone için olduğundan iPad ekran görüntüsü istenmez.
 | Copyright | `2026 Investa Teknoloji A.Ş.` |
 | Price | Free (ücretsiz) |
 | Availability | Bütün ülkeler (oyun internetsiz, veri toplamıyor). Domino'daki gibi sınırlamak istersen Türkiye, ABD ve Avrupa |
-| Support URL | [destek sayfasının adresi, hazırlanıyor] |
-| Privacy Policy URL | [gizlilik sayfasının adresi, hazırlanıyor] |
+| Support URL | `https://www.investa.com.tr/sandful/` (`site/index.html` oraya yüklenince) |
+| Privacy Policy URL | `https://www.investa.com.tr/sandful/privacy.html` (`site/privacy.html` oraya yüklenince) |
 | Marketing URL | Boş bırakılabilir |
 | Content Rights | "Does not contain, show, or access third-party content" |
 | Version / Build | 1.0 / TestFlight'taki 1 numaralı derleme |

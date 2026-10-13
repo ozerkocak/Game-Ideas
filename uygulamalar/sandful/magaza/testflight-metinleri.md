@@ -47,9 +47,9 @@ Kum gerçek gibi yığılır ve yamaçtan kayar. Bazı bölümlerde tekne, kuğu
 
 | Alan | Değer |
 |---|---|
-| Feedback Email | [İnvesta'nın geri bildirim adresi] |
+| Feedback Email | develop@investa.com.tr |
 | Marketing URL | (boş bırakılabilir) |
-| Privacy Policy URL | gizlilik-politikasi.md'nin yayınlandığı adres (dış test için gerekli) |
+| Privacy Policy URL | `https://www.investa.com.tr/sandful/privacy.html` (dış test için gerekli) |
 | Sign-in required | Hayır |
 | Contact Information | Senin adın, e-posta, telefon (sadece Apple görür) |
 
