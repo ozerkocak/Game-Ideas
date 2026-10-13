@@ -463,7 +463,7 @@ Bu düzeltme 7. bölümü düşünmeden süpürene 2 yıldız verecek kadar kola
 | İnsan | 95 ★3 | 84 ★2 | 85 ★2,3 | 91 ★3 | 85 ★2,3 | 81 ★1,7 | 79 ★1,3 | 89 ★3 | 80 ★1,7 | 81 ★1,7 |
 | Kusursuz | 98 ★3 | 97 ★3 | 98 ★3 | 98 ★3 | 96 ★3 | 90 ★3 | 94 ★3 | 94 ★3 | 95 ★3 | 94 ★3 |
 
-### Sıradaki büyük adım önerisi: gerçek 3D kum (Ozer'in onayına)
+### Sıradaki büyük adım önerisi: gerçek 3D kum (ertelendi)
 
 Kalan en büyük gerçekçilik açığı: kum fiziği hâlâ camın ön kesitinde 2D hesaplanıyor; yığın önden arkaya aynı şekilde uzanıyor (koni değil, sırt gibi).
 Gerçek 3D kumda (genişlik × derinlik ızgarası) yığın koni olur, kum her yöne yayılır, ön camda görünen katmanlar camın kendisindeki kesittir.
@@ -472,6 +472,8 @@ Ama oyunu değiştirir:
 - Ortaya dökülen kum ön cama 0,6 birim (kavanoz boyunun %28'i) daha alçak ulaşır. Gerçek kum sanatçıları bu yüzden camın dibine döker; huni ön cam boyunca, camın kıvrımını izleyerek gezmeli.
 - Kum arkaya da yayıldığı için katmanlar daha yavaş yükselir; dökülecek miktar, bölümler ve botlar baştan ayarlanmalı.
 - Hesap yükü artar (128 × 64 sütun), telefonda ölçmek gerekir.
+
+**Karar (Ozer):** "Şu anki 3D güzel kalsın, sonra düzeltiriz." TestFlight mevcut 2D kesit fiziğiyle çıkar; gerçek 3D kum, TestFlight geri bildiriminden sonra yeniden ele alınır.
 
 ## Sürüm 7: son kontroller ve TestFlight hazırlığı
 
