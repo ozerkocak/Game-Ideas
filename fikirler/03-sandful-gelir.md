@@ -54,7 +54,23 @@ Domino Chase'te de reklam yerleri hazır ama gerçek reklam bağlı değil. Rekl
   1.1 (yaklaşık 2-3 hafta) reklam, satın alma, geri alma, duvar kâğıdı ve ilk sahne paketiyle gelir.
 - **B:** Yayını bekletip 1.0'ı doğrudan para kazanmalı çıkarmak.
 
-## Açık sorular
+## Ozer'in cevapları (13 Ekim 2026)
+
+1. Model: "Farklı fikirler buluruz." Yukarıdaki model kesin değil; aşağıdaki alternatiflerle birlikte yeniden konuşulacak.
+2. Zamanlama: **A**. 1.0 reklamsız incelemeye gönderildi; reklam ve satın alma 1.1'de.
+3. Domino için AdMob hesabı açılmadı. 1.1 için açılacak (Ozer, şirketin Google hesabıyla).
+
+## Alternatif fikirler (konuşulacak)
+
+| Fikir | Nasıl para kazandırır | Not |
+|---|---|---|
+| **Serbest atölye**: kendi şişeni tasarla (renk, cam, süs seç) | Ek renk paletleri, cam şekilleri, süsler satılır ya da ödüllü reklamla açılır | Bölüm üretmeden içerik sağlar; paylaşılabilir eser çıkar |
+| **Günün şişesi**: her gün yeni bir sahne | Kaçırılan günü ödüllü reklamla açma; seri ödülü | Geri dönüş sebebi; içerik takvimi gerekir |
+| **Kozmetik koleksiyon**: masa, arka plan, kapak, huni temaları | Tek tek ya da paket satış | Oynanışı değiştirmez, rahatlatma bozulmaz |
+| **Sezon paketleri**: yılbaşı, bahar, cadılar bayramı, Ramazan | Sınırlı süreli paket | Mağazada öne çıkma fırsatı |
+| **Duvar kâğıdı / paylaşım**: bitmiş şişeyi yüksek çözünürlükte kaydet, video olarak paylaş | Ödüllü reklam ya da Sandful+ | Paylaşılan her video reklam gibi çalışır |
+
+## Açık sorular (ilk tur)
 
 1. Model uygun mu? Çıkarmak ya da eklemek istediğin bir şey var mı (ör. sadece reklam, ya da sadece satın alma)?
 2. Zamanlama A mı, B mi?
