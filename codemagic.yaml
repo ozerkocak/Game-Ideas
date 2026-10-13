@@ -1,0 +1,60 @@
+# Codemagic bulut derleme ayarı (codemagic.io). Mac gerekmeden iOS derler ve TestFlight'a yükler.
+# Kurulum adımları: uygulamalar/kum-sisesi/TESTFLIGHT.md
+workflows:
+  kum-sisesi-ios:
+    name: Kum Şişesi · iOS → TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      # Codemagic > Team settings > Integrations > App Store Connect'teki anahtarın adı.
+      # Domino Chase için eklenen anahtar aynı Apple ekibinde olduğundan burada da kullanılır.
+      app_store_connect: DominoChase
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.investateknoloji.kumsisesi
+      vars:
+        # App Store Connect > Uygulama > Uygulama Bilgileri > Apple Kimliği (rakamlardan oluşur)
+        APP_STORE_APPLE_ID: "0000000000"
+        APP_DIR: uygulamalar/kum-sisesi
+        XCODE_PROJECT: uygulamalar/kum-sisesi/ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Paketleri kur
+        script: cd "$APP_DIR" && npm ci
+      - name: Oyunu uygulamaya kopyala
+        script: cd "$APP_DIR" && npm run build && npx cap sync ios
+      - name: İmzalama profillerini uygula
+        script: xcode-project use-profiles --project "$XCODE_PROJECT"
+      - name: Derleme numarasını artır
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          NEXT=$((LATEST + 1))
+          perl -pi -e "s/CURRENT_PROJECT_VERSION = [0-9]+;/CURRENT_PROJECT_VERSION = $NEXT;/g" "$XCODE_PROJECT/project.pbxproj"
+          echo "Derleme numarası: $NEXT"
+      - name: IPA oluştur
+        script: xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  kum-sisesi-android:
+    name: Kum Şişesi · Android test APK
+    max_build_duration: 30
+    instance_type: linux_x2
+    environment:
+      node: 22
+      java: 21
+    scripts:
+      - name: Paketleri kur ve oyunu kopyala
+        script: cd uygulamalar/kum-sisesi && npm ci && npm run build && npx cap sync android
+      - name: APK oluştur
+        script: cd uygulamalar/kum-sisesi/android && chmod +x gradlew && ./gradlew assembleDebug
+    artifacts:
+      - uygulamalar/kum-sisesi/android/app/build/outputs/apk/debug/*.apk

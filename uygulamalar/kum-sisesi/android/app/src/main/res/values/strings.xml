@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kum Şişesi</string>
+    <string name="title_activity_main">Kum Şişesi</string>
+    <string name="package_name">com.investateknoloji.kumsisesi</string>
+    <string name="custom_url_scheme">com.investateknoloji.kumsisesi</string>
+</resources>

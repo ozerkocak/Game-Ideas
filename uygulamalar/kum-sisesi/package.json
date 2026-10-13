@@ -1,0 +1,25 @@
+{
+  "name": "kum-sisesi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kum Şişesi: iOS ve Android uygulama paketi (Capacitor)",
+  "scripts": {
+    "build": "node scripts/build-www.mjs",
+    "sync": "npm run build && npx cap sync",
+    "native": "rm -rf ios android && npm run build && npx cap add ios && npx cap add android && python3 scripts/configure-native.py && npm run assets",
+    "assets": "python3 scripts/make-icon.py resources && npx capacitor-assets generate --iconBackgroundColor '#d9c4a5' --splashBackgroundColor '#d9c4a5' && rm -rf icons www/manifest.json ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732*.png"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.2",
+    "@capacitor/app": "8.1.1",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.5.2",
+    "@capacitor/preferences": "8.0.1",
+    "three": "0.128.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "8.5.2"
+  }
+}

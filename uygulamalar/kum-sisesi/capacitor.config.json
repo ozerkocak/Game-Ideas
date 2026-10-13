@@ -1,0 +1,14 @@
+{
+  "appId": "com.investateknoloji.kumsisesi",
+  "appName": "Kum Şişesi",
+  "webDir": "www",
+  "backgroundColor": "#d9c4a5",
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": false,
+    "backgroundColor": "#d9c4a5"
+  },
+  "android": {
+    "backgroundColor": "#d9c4a5"
+  }
+}

@@ -8,3 +8,5 @@ Telefonda oynanan, oyuncuyu yormadan rahatlatan, akışı olan ve kısa düşün
 - `fikirler/`: Koda dökülmeden önce yazılan fikir taslakları. İlk tur: `fikirler/01-ilk-tur.md`.
 - `prototipler/`: Onaylanan fikirlerin tek dosyalık HTML prototipleri. Telefonda tarayıcıda açılarak oynanır.
   - `01-kum-sisesi.html`: Kum Şişesi, 10 bölüm, 3D (three.js), tane tane kum görüntüsü ve sentezlenmiş kum sesi. Tasarım ve bot sonuçları: `fikirler/02-kum-sisesi.md`.
+- `uygulamalar/`: Uygulamaya dönüşen oyunlar (Capacitor; iOS ve Android).
+  - `kum-sisesi/`: Kum Şişesi uygulama paketi. TestFlight'a çıkış: `uygulamalar/kum-sisesi/TESTFLIGHT.md`. Bulut derleme: kökteki `codemagic.yaml`.
