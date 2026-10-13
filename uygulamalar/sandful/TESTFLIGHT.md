@@ -46,8 +46,8 @@ Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi ekle; ad her dilde aynı ka
 
 ### 3. Bir kerelik kurulum (Mac)
 
-1. **GitHub Desktop**'ta File > Clone Repository > GitHub.com sekmesi > `ozerkocak/Game-Ideas` > **Clone**
-   (varsayılan klasör: `~/Documents/GitHub/Game-Ideas`).
+1. **GitHub Desktop**'ta File > Clone Repository > GitHub.com sekmesi > `ozerkocak/Sandful` > **Clone**
+   (varsayılan klasör: `~/Documents/GitHub/Sandful`).
 2. Üstteki **Current Branch** menüsünden `claude/clever-wright-10sbmw` dalını seç.
 
 ### 4. Her yeni sürümde
@@ -56,7 +56,7 @@ Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi ekle; ad her dilde aynı ka
    Sol tarafta "Changes" listesinde dosya görünürse (Xcode bazen proje dosyasını değiştirir): sağ tık > **Discard All Changes**, sonra Pull.
 2. Terminal'de:
    ```bash
-   cd ~/Documents/GitHub/Game-Ideas/uygulamalar/sandful
+   cd ~/Documents/GitHub/Sandful/uygulamalar/sandful
    sh scripts/ios-hazirla.sh
    ```
    Paketleri kurar, oyunu uygulamaya kopyalar ve Xcode'u açar.
@@ -75,7 +75,7 @@ Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi ekle; ad her dilde aynı ka
 ## Yedek yol: Codemagic (Mac gerekmez)
 
 Mac'e erişemediğin zamanlar için kökteki `codemagic.yaml` hazır (Apple Kimliği işli). Kullanmak istersen:
-App Store Connect API anahtarı oluştur, codemagic.io'ya `ozerkocak/Game-Ideas`'ı ekle, anahtarı **DominoChase** adıyla
+App Store Connect API anahtarı oluştur, codemagic.io'ya `ozerkocak/Sandful`'ı ekle, anahtarı **DominoChase** adıyla
 Integrations > App Store Connect'e bağla, Code signing identities'ten dağıtım sertifikası ve `com.investateknoloji.sandful` App Store profilini al,
 sonra **Sandful · iOS → TestFlight** iş akışını başlat. Bu yolda derleme numarası otomatik artar.
 

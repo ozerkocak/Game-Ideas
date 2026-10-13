@@ -1,6 +1,7 @@
-# Game Ideas
+# Sandful
 
-Telefonda oynanan, oyuncuyu yormadan rahatlatan, akışı olan ve kısa düşündüren oyunlar için fikirler ve prototipler.
+Sandful oyununun deposu (önceki adı Game-Ideas). Telefonda oynanan, oyuncuyu yormadan rahatlatan, akışı olan ve kısa düşündüren oyunlar için fikirler ve prototipler de burada.
+Sonraki bir oyun uygulamaya dönüşünce Domino'daki gibi kendi deposuna taşınır.
 İlk oyun [Domino Chase](https://github.com/ozerkocak/Domino-Game-) ayrı repoda.
 
 - `TASARIM-ILKELERI.md`: Bütün oyunlar için ortak şartlar, Domino'dan çıkan dersler, ses ve titreşim rehberi.

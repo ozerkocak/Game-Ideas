@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Rahatlatan, akışı olan, kısa düşündüren mobil oyun fikirleri ve prototipleri. Sahibi: Ozer (İnvesta Teknoloji).
+Sandful oyununun deposu (`ozerkocak/Sandful`, önceki adı Game-Ideas); rahatlatan, akışı olan, kısa düşündüren mobil oyun fikirleri ve prototipleri de burada. Sahibi: Ozer (İnvesta Teknoloji).
 İlk oyun Domino Chase ayrı bir repoda (`ozerkocak/Domino-Game-`); oradan çıkan dersler bu repoya taşındı.
 
 ## Önce oku
