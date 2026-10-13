@@ -1,4 +1,4 @@
-# Codemagic bulut derleme ayarı (codemagic.io). Mac gerekmeden iOS derler ve TestFlight'a yükler.
+# Codemagic bulut derleme ayarı (codemagic.io). Yedek yol: asıl yükleme Mac'te Xcode ile yapılır. Mac gerekmeden iOS derler ve TestFlight'a yükler.
 # Kurulum adımları: uygulamalar/sandful/TESTFLIGHT.md
 workflows:
   sandful-ios:
@@ -7,7 +7,6 @@ workflows:
     instance_type: mac_mini_m2
     integrations:
       # Codemagic > Team settings > Integrations > App Store Connect'teki anahtarın adı.
-      # Domino Chase için eklenen anahtar aynı Apple ekibinde olduğundan burada da kullanılır.
       app_store_connect: DominoChase
     environment:
       ios_signing:

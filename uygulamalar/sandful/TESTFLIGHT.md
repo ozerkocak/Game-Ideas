@@ -26,57 +26,31 @@ Varsayılanlar:
 |---|---|
 | Uygulama adı | Sandful (App Store başlığı: "Sandful: Relaxing Sand Art") |
 | Paket kimliği (Bundle ID) | `com.investateknoloji.sandful` |
-| Sürüm | 1.0 (derleme numarası Codemagic'te otomatik artar) |
+| Sürüm | 1.0, derleme 1 (her yeni yüklemede Claude artırır) |
 | Cihaz | Sadece iPhone, dikey, tam ekran |
 | Ekip | İnvesta Teknoloji (`3ANJ967SS2`) |
 
 ## Senin yapacakların
 
-Apple Developer hesabı ve Codemagic, Domino Chase'ten hazır. Yeni olan: Bundle ID, uygulama kaydı ve imza profili.
+Domino Chase'teki yol: GitHub Desktop'tan çek, Mac'te Xcode ile yükle. Apple Developer hesabı, Xcode ve Node.js Domino'dan hazır.
 
-### 1. Bundle ID
+### 1. Bundle ID ✓
 
 developer.apple.com > Certificates, Identifiers & Profiles > Identifiers > **+** > App IDs > App.
 Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek yetenek seçmen gerekmez.
 
-### 2. App Store Connect'te uygulama kaydı
+### 2. App Store Connect'te uygulama kaydı ✓
 
-1. appstoreconnect.apple.com > Uygulamalar > **+** > Yeni Uygulama.
-   Platform iOS, ad **Sandful: Relaxing Sand Art**, birincil dil **İngilizce (ABD)**, Bundle ID yukarıdaki, SKU: `sandful`.
-   - Ad App Store'da görünen başlıktır (en fazla 30 karakter); telefonda ikonun altında sadece **Sandful** yazar.
-   - İsim alınmışsa App Store Connect hemen söyler. "Sandful: Calm Sand Art" dene ve bana yaz.
-   - Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi de ekle. Ad her dilde aynı kalsın (marka); alt başlık ve açıklama çevrilir (`magaza/testflight-metinleri.md`).
-2. ~~Uygulama Bilgileri sayfasındaki **Apple Kimliği**'ni bana yaz.~~ Yapıldı: uygulama açıldı (ad "Sandful: Relaxing Sand Art"), Apple Kimliği `6822243071` `codemagic.yaml`'a işlendi.
+Uygulama açıldı: ad **Sandful: Relaxing Sand Art**, birincil dil İngilizce (ABD), SKU `sandful`, Apple Kimliği `6822243071`.
+Uygulama Bilgileri'nde **Türkçe** yerelleştirmeyi ekle; ad her dilde aynı kalır, alt başlık ve açıklama çevrilir (`magaza/testflight-metinleri.md`).
 
-### 3. Codemagic
+### 3. Bir kerelik kurulum (Mac)
 
-1. codemagic.io > **Add application** > GitHub > `ozerkocak/Game-Ideas` deposunu seç (yapılandırma: codemagic.yaml).
-2. App Store Connect anahtarı Domino Chase için **DominoChase** adıyla eklenmişti; aynı Apple ekibi olduğu için yeniden eklemen gerekmez.
-   Farklı bir ad verdiysen bana yaz, `codemagic.yaml`'da değiştireyim.
-3. Team settings > **Code signing identities** > iOS provisioning profiles > **Fetch profiles**:
-   `com.investateknoloji.sandful` için App Store profili gelmezse önce developer.apple.com > Profiles > **+** > App Store Connect >
-   App ID olarak Sandful'u ve Domino'daki Apple Distribution sertifikasını seçip profili oluştur, sonra tekrar Fetch.
-4. Codemagic'te uygulamayı aç > **Start new build** > dal: `claude/clever-wright-10sbmw`, iş akışı: **Sandful · iOS → TestFlight**.
-   Derleme 10-20 dakika sürer ve bitince otomatik TestFlight'a yüklenir.
+1. **GitHub Desktop**'ta File > Clone Repository > GitHub.com sekmesi > `ozerkocak/Game-Ideas` > **Clone**
+   (varsayılan klasör: `~/Documents/GitHub/Game-Ideas`).
+2. Üstteki **Current Branch** menüsünden `claude/clever-wright-10sbmw` dalını seç.
 
-### 4. TestFlight
-
-1. App Store Connect > Sandful > **TestFlight**. Yeni derleme birkaç dakika "işleniyor" görünür.
-2. Şifreleme sorusu çıkmaz (uygulama ayarlarında "standart dışı şifreleme yok" işaretli).
-3. **İç test**: ekibindeki App Store Connect kullanıcılarını ekle; inceleme beklemeden dener.
-4. **Dış test**: bir grup oluştur, derlemeyi ekle, `magaza/testflight-metinleri.md`'deki metinleri gir.
-   İlk dış derleme kısa bir Apple incelemesinden geçer (genelde 1 gün). Sonra herkese açık bağlantı oluşturup paylaşabilirsin.
-
-## Alternatif: Mac'te Xcode ile yükleme (Codemagic gerekmez)
-
-### Bir kerelik kurulum
-
-1. Mac App Store'dan **Xcode**'u kur, Xcode > Settings > **Accounts**'tan Apple ID ile giriş yap.
-2. nodejs.org'dan **Node.js LTS** sürümünü kur.
-3. **GitHub Desktop**'ta File > Clone Repository > `ozerkocak/Game-Ideas` > Clone (varsayılan klasör `~/Documents/GitHub/Game-Ideas`).
-4. Üstteki **Current Branch** menüsünden `claude/clever-wright-10sbmw` dalını seç.
-
-### Her yeni sürümde
+### 4. Her yeni sürümde
 
 1. GitHub Desktop'ta **Fetch origin**, ardından **Pull origin**.
    Sol tarafta "Changes" listesinde dosya görünürse (Xcode bazen proje dosyasını değiştirir): sağ tık > **Discard All Changes**, sonra Pull.
@@ -86,9 +60,24 @@ Açıklama: Sandful, Bundle ID: `com.investateknoloji.sandful` (Explicit). Ek ye
    sh scripts/ios-hazirla.sh
    ```
    Paketleri kurar, oyunu uygulamaya kopyalar ve Xcode'u açar.
-3. Xcode'da cihaz olarak **Any iOS Device (arm64)** seç > **Product > Archive** > **Distribute App > App Store Connect > Distribute**.
-   Her yüklemede derleme numarası bir öncekinden büyük olmalı: Xcode'da App hedefi > General > **Build** alanını 1 artır.
+3. Xcode'da cihaz menüsünden **Any iOS Device (arm64)** seç, **Product > Archive**, ardından **Distribute App > App Store Connect > Distribute**.
+   İmzalamayı Xcode kendisi yapar (ekip `3ANJ967SS2` projede hazır). Build numarası projede hazır gelir (her sürümde Claude artırır), elle değiştirme.
 4. 10-30 dakika sonra TestFlight'ta görünür.
+
+### 5. TestFlight
+
+1. App Store Connect > Sandful > **TestFlight**. Yeni derleme birkaç dakika "işleniyor" görünür.
+2. Şifreleme sorusu çıkmaz (uygulama ayarlarında "standart dışı şifreleme yok" işaretli).
+3. **İç test**: ekibindeki App Store Connect kullanıcılarını ekle; inceleme beklemeden dener.
+4. **Dış test**: bir grup oluştur, derlemeyi ekle, `magaza/testflight-metinleri.md`'deki metinleri gir.
+   İlk dış derleme kısa bir Apple incelemesinden geçer (genelde 1 gün). Sonra herkese açık bağlantı oluşturup paylaşabilirsin.
+
+## Yedek yol: Codemagic (Mac gerekmez)
+
+Mac'e erişemediğin zamanlar için kökteki `codemagic.yaml` hazır (Apple Kimliği işli). Kullanmak istersen:
+App Store Connect API anahtarı oluştur, codemagic.io'ya `ozerkocak/Game-Ideas`'ı ekle, anahtarı **DominoChase** adıyla
+Integrations > App Store Connect'e bağla, Code signing identities'ten dağıtım sertifikası ve `com.investateknoloji.sandful` App Store profilini al,
+sonra **Sandful · iOS → TestFlight** iş akışını başlat. Bu yolda derleme numarası otomatik artar.
 
 ## Mağazaya çıkarken (TestFlight'tan sonra)
 
@@ -112,5 +101,6 @@ npm run native     # ios/ ve android/ projelerini sıfırdan üretir, iOS ayarla
 ```
 
 - iOS projesi Swift Package Manager kullanır (CocoaPods yok). Mac'te `npx cap open ios` ile Xcode'da açılır.
-- Oyunda değişiklik yapınca sadece `prototipler/01-kum-sisesi.html` düzenlenir; Codemagic her derlemede `www/`'yi yeniden üretir.
+- Oyunda değişiklik yapınca sadece `prototipler/01-kum-sisesi.html` düzenlenir; `ios-hazirla.sh` (ya da Codemagic) her derlemede `www/`'yi yeniden üretir.
+- Yeni sürüm yüklemeden önce `ios/App/App.xcodeproj/project.pbxproj` içindeki `CURRENT_PROJECT_VERSION` 1 artırılır (App Store aynı numarayı iki kez kabul etmez).
 - İkon ve açılış ekranı `scripts/make-icon.py` ile çizilir (`resources/`), `npm run assets` bütün boyutları üretir.

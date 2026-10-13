@@ -21,6 +21,8 @@ Rahatlatan, akışı olan, kısa düşündüren mobil oyun fikirleri ve prototip
 - Ses Web Audio ile sentezlenir. Titreşim tarayıcıda `navigator.vibrate`, uygulamada Capacitor Haptics ile yapılır (iOS Safari `vibrate` desteklemez).
   iPhone'da Web Audio ilk dokunuşta sessiz kalabilir: Domino Chase'teki `htmlAudioUnlock` gibi kısa bir sessiz WAV çal, sesi her dokunma aşamasında (pointerup/touchend/click) açmayı dene.
 - Uygulamaya dönüşen oyun `uygulamalar/<oyun-adi>/` altına Capacitor paketi olarak girer (Domino Chase'teki `uygulama/` yapısı örnek alınır).
+  Ozer TestFlight'a Domino'daki gibi yükler: GitHub Desktop'tan dalı çeker, Mac'te `scripts/ios-hazirla.sh` ve Xcode Archive. Codemagic sadece yedek yol.
+  Her yeni yüklemeden önce iOS projesindeki `CURRENT_PROJECT_VERSION`'ı 1 artır.
 
 ## Test
 
