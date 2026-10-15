@@ -88,6 +88,7 @@ Telefonda "güzel his" üç katmanda verilir. Her oyun tasarımında bu tablo do
 - Ortam sesi (rüzgâr, gece böcekleri, yağmur) çok düşük seviyede sürekli çalar; rahatlamayı o taşır.
 - Sürekli sesler (akış, hışırtı) boğuk olmasın: alçak frekansı kes, parlak ama yumuşak tut (sert tiz de yorar). Müzik ve efektler hafif bir oda yankısından geçerse daha sakin duyulur.
 - Titreşim seviyeleri: hafif < 14 ms, orta 14-50 ms, güçlü ≥ 50 ms (Domino Chase'teki `vib()` eşlemesi). Uygulamada Capacitor Haptics `impact` kullanılır.
+- Fizik ve titreşim için referans: Smash Fest! (Ozer, Ekim 2026: "fizik mekaniği çok iyi, titreşim çok güzel"). Çarpan, kırılan şeylerde titreşim ve ses çarpmanın şiddetine ve malzemesine göre değişir; her çarpma aynı tık olmaz.
 - Titreşimi abartma: sürekli titreşim yorucu. Mikro katmanı sesle eşle, ama hızlı akışta seyrelt.
 - Ayarlarda ses ve titreşim ayrı ayrı kapatılabilir.
 - iPhone ses kilidi: ilk dokunuşta sessiz WAV + her dokunma aşamasında `AudioContext.resume()`.

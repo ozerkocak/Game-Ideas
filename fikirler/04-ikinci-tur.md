@@ -275,6 +275,23 @@ Hızlı bir ikinci oyun gerekirse **F (Fitil)** Domino Chase motoruyla en kısa 
 4. "3 saniye testi" ilkelere girsin mi?
 5. İstersen seçmeden önce iki yönün sadece çekirdek hissini veren kaba prototipini (3'er bölüm) yapayım, telefonda deneyip seç.
 
+## Ozer'in cevapları (15 Ekim 2026)
+
+1. Evet, Smash Fest!. "Oradaki fizik mekaniği çok iyi, titreşim vs çok güzel. Aynısını tabi yapmayalım. Ama mantık olarak hangi tarzların tuttuğunu görmen açısından söyledim."
+2. Yön henüz seçilmedi.
+3. "Aynısını yapmayalım": nişan al, bırak, izle döngüsü alınmıyor, girdi sürekli kalıyor (benim yorumum).
+
+### Bundan çıkan
+
+- **Smash Fest'ten alınacak asıl ders fizik ve titreşimin kalitesi.** Seçilen yönde fizik taklit değil, gerçek olacak:
+  kopan parçalar yuvarlanır, birbirine ve yere çarpar, sert düşen parça tekrar kırılır. Fitil'deki "kural tabanlı çöküş" yerine gerçek katı cisim fiziği.
+- **Titreşim ve ses çarpmanın şiddetine ve malzemesine göre değişir.** Hafif sekme hafif, ağır parçanın yere düşmesi güçlü; her çarpma aynı tık olmaz.
+  Aynı anda çok çarpma olursa en güçlüleri seçilir (saniyede ~15-20 sınırı).
+- **Fizik hissine göre sıralama:** Sarkaç (baştan sona fizik) > Fitil (gerçek fizikle çöküş) > Yontu (kopan parçalar) > Buzkıran (yüzen levhalar).
+  Yontu'da fizik payı artırılır: kopan parça masaya düşüp yuvarlanır, sert düşerse ikiye ayrılır, kırıntılar zıplar.
+- **Test notu:** iPhone'da tarayıcı titreşim desteklemez. Titreşimi telefonda hissetmek için prototipin Capacitor'lu küçük bir TestFlight derlemesi gerekir
+  (Android'de Chrome'da tarayıcıdan da olur).
+
 ## Kaynaklar
 
 - [FoxData · How Smash Fest! hit #1 on the US App Store with zero paid UA](https://foxdata.com/en/blogs/how-smash-fest-hit-1-on-the-us-app-store-with-zero-paid-uaand-what-it-means-for-hybrid-casual/)
